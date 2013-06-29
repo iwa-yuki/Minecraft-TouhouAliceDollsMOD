@@ -1,0 +1,17 @@
+[
+{
+  "modid": "touhou_alice_dolls",
+  "name": "Alice's Dolls MOD",
+  "description": "This MOD is fanfiction of \"Shanghai Alice Gengakudan(Touhou Project)\".",
+  "version": "1.5.x-ntr",
+  "mcversion": "1.5.x",
+  "logoFile": "/logo.png",
+  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=832",
+  "updateUrl": "",
+  "authors": ["iwa_yukinoshita"],
+  "credits": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
