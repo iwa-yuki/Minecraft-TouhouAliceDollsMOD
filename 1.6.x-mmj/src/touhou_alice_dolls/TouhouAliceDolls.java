@@ -1,3 +1,6 @@
+////////////////////////////////////////////////////////////////////////////////
+// アリスの人形MOD
+
 package mods.touhou_alice_dolls;
 
 import cpw.mods.fml.common.Mod;
@@ -10,7 +13,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.SidedProxy;
 
 /**
- * $B%"%j%9$N?M7A(BMOD $B%a%$%s%/%i%9(B
+ * アリスの人形MOD メインクラス
  */
 @Mod(
     modid = "touhou_alice_dolls",

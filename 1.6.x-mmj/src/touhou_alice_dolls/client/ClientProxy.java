@@ -1,14 +1,17 @@
+////////////////////////////////////////////////////////////////////////////////
+// アリスの人形MOD
+
 package mods.touhou_alice_dolls.client;
 
 import mods.touhou_alice_dolls.CommonProxy;
 
 /**
- * $B%/%i%$%"%s%HB&$N$_$N=hM}$r9T$&%/%i%9(B
+ * クライアント側のみの処理を行うクラス
  */
 public class ClientProxy extends CommonProxy
 {
     /**
-     * $B%l%s%@%i$NEPO?(B
+     * レンダラの登録
      */
     @Override
     public void registerRenderers()
