@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // アリスの人形MOD
 
-package mods.touhou_alice_dolls;
+package iwa_yuki.touhou_alice_dolls;
 
 /**
  * サーバー・クライアント共通の処理を行うクラス
