@@ -1,19 +1,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 // アリスの人形MOD
 
-package iwa_yuki.touhou_alice_dolls.client;
+package mods.touhou_alice_dolls.client;
 
 import net.minecraft.client.model.ModelBiped;
 
-import iwa_yuki.touhou_alice_dolls.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-/**
- * 人形のモデルクラス
- */
+import mods.touhou_alice_dolls.*;
+
+@SideOnly(Side.CLIENT)
 public class ModelAliceDoll extends ModelBiped
 {
-    public ModelAliceDoll(float expand)
+    public ModelAliceDoll()
     {
-        super(expand);
+        super(0.0F);
+    }
+
+    public ModelAliceDoll(float par1)
+    {
+        super(par1);
     }
 }

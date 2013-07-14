@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // アリスの人形MOD
 
-package iwa_yuki.touhou_alice_dolls;
+package mods.touhou_alice_dolls;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -63,7 +63,7 @@ public class TouhouAliceDolls
         try
         {
             cfg.load();
-            
+
             this.entityAliceDollID = cfg.get(
                 "entity", "EntityAliceDollID", 68).getInt();
             this.itemDollCoreID = cfg.getItem(
@@ -79,7 +79,7 @@ public class TouhouAliceDolls
         {
             cfg.save();
         }
-
+        
         // アイテムの登録
         registerItems();
     }
@@ -92,12 +92,12 @@ public class TouhouAliceDolls
     {
         // エンティティの登録
         EntityRegistry.registerGlobalEntityID(
-            EntityAliceDoll.class, "AliceDoll", this.entityAliceDollID, 0x000000, 0xffff00);
+            EntityAliceDoll.class, "AliceDoll", this.entityAliceDollID);
         EntityRegistry.registerModEntity(
             EntityAliceDoll.class, "AliceDoll", this.entityAliceDollID,
             this, 64, 1, true);
 
-        // レンダーの初期化処理
+        // レンダラの登録
         proxy.registerRenderers();
     }
 
@@ -109,28 +109,29 @@ public class TouhouAliceDolls
     {
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+
     /**
      * アイテムの登録
      */
-    protected void registerItems()
+    private void registerItems()
     {
         // ドールコア
-        this.itemDollCore = new ItemDollCore(this.itemDollCoreID)
-            .setUnlocalizedName("dollcore");
+        this.itemDollCore = new ItemDollCore(this.itemDollCoreID);
         LanguageRegistry.instance().addNameForObject(
             itemDollCore, "en_US", "Doll Core");
         LanguageRegistry.instance().addNameForObject(
             itemDollCore, "ja_JP", "ドールコア");
 
         // 人形
-        this.itemAliceDoll = new ItemAliceDoll(this.itemAliceDollID)
-            .setUnlocalizedName("alicedoll");
+        this.itemAliceDoll = new ItemAliceDoll(this.itemAliceDollID);
         LanguageRegistry.instance().addNameForObject(
             itemAliceDoll, "en_US", "Alice's Doll");
         LanguageRegistry.instance().addNameForObject(
             itemAliceDoll, "ja_JP", "アリスの人形");
     }
 
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * 人形のエンティティID
      */

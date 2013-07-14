@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 // アリスの人形MOD
 
-package iwa_yuki.touhou_alice_dolls.client;
+package mods.touhou_alice_dolls.client;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
-import iwa_yuki.touhou_alice_dolls.*;
+import mods.touhou_alice_dolls.*;
 
 /**
  * クライアント側のみの処理を行うクラス
@@ -19,6 +19,6 @@ public class ClientProxy extends CommonProxy
     public void registerRenderers()
     {
         RenderingRegistry.registerEntityRenderingHandler(
-            EntityAliceDoll.class, new RenderAliceDoll());
+                EntityAliceDoll.class, new RenderAliceDoll());
     }
 }
