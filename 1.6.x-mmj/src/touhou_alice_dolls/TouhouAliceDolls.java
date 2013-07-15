@@ -13,13 +13,18 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.SidedProxy;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.FMLLog;
 import java.util.logging.Level;
 
 import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.common.Configuration;
+
+import mods.touhou_alice_dolls.dolls.DollRegistry;
 
 /**
  * アリスの人形MOD メインクラス
@@ -99,6 +104,9 @@ public class TouhouAliceDolls
 
         // レンダラの登録
         proxy.registerRenderers();
+
+        // レシピの登録
+        registerRecipes();
     }
 
     /**
@@ -129,6 +137,22 @@ public class TouhouAliceDolls
             itemAliceDoll, "en_US", "Alice's Doll");
         LanguageRegistry.instance().addNameForObject(
             itemAliceDoll, "ja_JP", "アリスの人形");
+    }
+
+    /**
+     * レシピの登録
+     */
+    private void registerRecipes()
+    {
+        GameRegistry.addRecipe(new ItemStack(this.itemDollCore),
+                               "# $",
+                               "#d$",
+                               " # ",
+                               '#', new ItemStack(Item.redstone),
+                               '$', new ItemStack(Item.dyePowder, 1, 4),
+                               'd', new ItemStack(Item.diamond));
+
+        DollRegistry.addRecipes();
     }
 
     ////////////////////////////////////////////////////////////////////////////

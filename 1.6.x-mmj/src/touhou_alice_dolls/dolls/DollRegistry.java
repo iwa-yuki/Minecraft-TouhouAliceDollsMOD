@@ -4,6 +4,7 @@
 package mods.touhou_alice_dolls.dolls;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.model.ModelBiped;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -30,6 +31,26 @@ public class DollRegistry
     static public int getDollListLength()
     {
         return (dollList!=null ? dollList.length : 0);
+    }
+
+    /**
+     * 指定された名前の人形のIDを取得
+     * @param name 人形の名前
+     * @return 人形のID(存在しなければ-1)
+     */
+    static public int getDollID(String name)
+    {
+        for(int i=0;i<getDollListLength();++i)
+        {
+            if(isExist(i))
+            {
+                if(name.equals(getDollName(i)))
+                {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 
     /**
@@ -86,6 +107,34 @@ public class DollRegistry
     }
 
     /**
+     * 人形の高さを取得
+     * @param id 人形のID
+     */
+    static public float getHeight(int id)
+    {
+        if(isExist(id))
+        {
+            return dollList[id].getHeight();
+        }
+
+        return 1.8F;
+    }
+
+    /**
+     * 人形の幅を取得
+     * @param id 人形のID
+     */
+    static public float getWidth(int id)
+    {
+        if(isExist(id))
+        {
+            return dollList[id].getWidth();
+        }
+
+        return 0.7F;
+    }
+
+    /**
      * 人形のAIを初期化する必要があるときに呼ばれる
      * @param id 人形のID
      */
@@ -97,6 +146,20 @@ public class DollRegistry
         }
     }
 
+    /**
+     * 人形のレシピを追加する
+     */
+    static public void addRecipes()
+    {
+        for(int i=0;i<getDollListLength();++i)
+        {
+            if(isExist(i))
+            {
+                dollList[i].addRecipes();
+            }
+        }
+    }
+
     @SideOnly(Side.CLIENT)
     /**
      * 人形のModelを生成する
@@ -104,7 +167,7 @@ public class DollRegistry
      * @param float Modelの拡張係数
      * @retuen 人形Model
      */
-    static public ModelAliceDoll getModelInstance(int id, float expand)
+    static public ModelBiped getModelInstance(int id, float expand)
     {
         return isExist(id) ? dollList[id].getModelInstance(expand) : null;
     }

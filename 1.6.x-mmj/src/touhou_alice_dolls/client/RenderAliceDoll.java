@@ -4,6 +4,7 @@
 package mods.touhou_alice_dolls.client;
 
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -21,9 +22,9 @@ import mods.touhou_alice_dolls.dolls.*;
 @SideOnly(Side.CLIENT)
 public class RenderAliceDoll extends RenderBiped
 {
-    private ModelAliceDoll[] mainModels;
-    private ModelAliceDoll[] armorLayer1Models;
-    private ModelAliceDoll[] armorLayer2Models;
+    private ModelBiped[] mainModels;
+    private ModelBiped[] armorLayer1Models;
+    private ModelBiped[] armorLayer2Models;
     private Map resourceMap;
     
     public RenderAliceDoll()
@@ -31,9 +32,9 @@ public class RenderAliceDoll extends RenderBiped
         super(null, 0.5F);
 
         int length = DollRegistry.getDollListLength();
-        mainModels = new ModelAliceDoll[length];
-        armorLayer1Models = new ModelAliceDoll[length];
-        armorLayer2Models = new ModelAliceDoll[length];
+        mainModels = new ModelBiped[length];
+        armorLayer1Models = new ModelBiped[length];
+        armorLayer2Models = new ModelBiped[length];
         resourceMap = Maps.newHashMap();
 
         for(int i=0;i<length;++i)

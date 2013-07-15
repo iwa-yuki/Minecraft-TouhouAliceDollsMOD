@@ -14,14 +14,14 @@ import mods.touhou_alice_dolls.dolls.*;
 public class EntityAliceDoll extends EntityLiving
 {
     private int localDollID;
-    private boolean isAIInitialized;
+    private boolean isInitialized;
     
     public EntityAliceDoll(World world)
     {
         super(world);
 
         localDollID = -1;
-        isAIInitialized = false;
+        isInitialized = false;
     }
 
     @Override
@@ -46,13 +46,15 @@ public class EntityAliceDoll extends EntityLiving
 
     protected void onChangeDollID()
     {
-        if(!isAIInitialized)
+        if(!isInitialized)
         {
-            DollRegistry.onInitializeAI(getDollID());
-            isAIInitialized = true;
-            FMLLog.info("%s : Doll(%s[%s]).AI is initialized.",
+            setSize(DollRegistry.getWidth(localDollID),
+                    DollRegistry.getHeight(localDollID));
+            DollRegistry.onInitializeAI(localDollID);
+            isInitialized = true;
+            FMLLog.info("%s : Doll(%s[%s]) is initialized.",
                         (worldObj.isRemote?"R":"S"),
-                        DollRegistry.getDollName(getDollID()),
+                        DollRegistry.getDollName(localDollID),
                         entityId);
         }
     }
