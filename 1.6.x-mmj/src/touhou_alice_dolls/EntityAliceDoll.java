@@ -48,6 +48,7 @@ public class EntityAliceDoll extends EntityLiving
     {
         if(!isInitialized)
         {
+            setCurrentItemOrArmor(0, DollRegistry.getHeldItem(localDollID));
             setSize(DollRegistry.getWidth(localDollID),
                     DollRegistry.getHeight(localDollID));
             DollRegistry.onInitializeAI(localDollID);

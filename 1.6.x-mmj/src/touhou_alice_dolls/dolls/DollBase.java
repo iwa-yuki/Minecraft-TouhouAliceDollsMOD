@@ -92,6 +92,14 @@ public class DollBase
     }
 
     /**
+     * 手持ちアイテムを取得する
+     */
+    public ItemStack getHeldItem()
+    {
+        return new ItemStack(Item.swordGold);
+    }
+
+    /**
      * AIの初期化が必要なときに呼ばれる
      */
     public void onInitializeAI()
@@ -101,9 +109,6 @@ public class DollBase
     @SideOnly(Side.CLIENT)
     /**
      * 人形のModelを生成する
-     * @param id 人形のID
-     * @param float Modelの拡張係数
-     * @retuen 人形Model
      */
     public ModelBiped getModelInstance(float expand)
     {
@@ -129,4 +134,12 @@ public class DollBase
         return model;
     }
 
+    @SideOnly(Side.CLIENT)
+    /**
+     * 人形のレンダータイプを取得する
+     */
+    EnumRenderType getRenderType()
+    {
+        return EnumRenderType.DOLL;
+    }
 }

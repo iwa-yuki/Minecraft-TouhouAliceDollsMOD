@@ -5,6 +5,9 @@ package mods.touhou_alice_dolls.dolls;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -160,6 +163,16 @@ public class DollRegistry
         }
     }
 
+    /**
+     * 手持ちアイテムを取得する
+     * @param id 人形のID
+     * @return アイテムスタック
+     */
+    static public ItemStack getHeldItem(int id)
+    {
+        return isExist(id) ? dollList[id].getHeldItem() : null;
+    }
+
     @SideOnly(Side.CLIENT)
     /**
      * 人形のModelを生成する
@@ -170,5 +183,16 @@ public class DollRegistry
     static public ModelBiped getModelInstance(int id, float expand)
     {
         return isExist(id) ? dollList[id].getModelInstance(expand) : null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    /**
+     * 人形のレンダータイプを取得する
+     * @param id 人形のID
+     * @retuen レンダータイプ
+     */
+    static public EnumRenderType getRenderType(int id)
+    {
+        return isExist(id) ? dollList[id].getRenderType() : EnumRenderType.BIPED;
     }
 }
