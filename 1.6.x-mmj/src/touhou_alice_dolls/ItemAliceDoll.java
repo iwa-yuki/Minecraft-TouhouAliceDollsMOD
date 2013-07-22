@@ -76,7 +76,10 @@ public class ItemAliceDoll extends Item
                 {
                     ((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
                 }
-
+                if (entity instanceof EntityAliceDoll)
+                {
+                    ((EntityAliceDoll)entity).setOwner(par2EntityPlayer);
+                }
                 if (!par2EntityPlayer.capabilities.isCreativeMode)
                 {
                     --par1ItemStack.stackSize;

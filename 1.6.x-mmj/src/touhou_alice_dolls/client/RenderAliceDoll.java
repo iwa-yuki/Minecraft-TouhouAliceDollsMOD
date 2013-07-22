@@ -20,6 +20,7 @@ import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
 import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,7 +39,7 @@ public class RenderAliceDoll extends RenderBiped
     private ModelBiped[] mainModels;
     private ModelBiped[] armorLayer1Models;
     private ModelBiped[] armorLayer2Models;
-    private Map resourceMap;
+    private static Map resourceMap = Maps.newHashMap();
     
     public RenderAliceDoll()
     {
@@ -48,7 +49,6 @@ public class RenderAliceDoll extends RenderBiped
         mainModels = new ModelBiped[length];
         armorLayer1Models = new ModelBiped[length];
         armorLayer2Models = new ModelBiped[length];
-        resourceMap = Maps.newHashMap();
 
         for(int i=0;i<length;++i)
         {
@@ -87,7 +87,7 @@ public class RenderAliceDoll extends RenderBiped
      * ハッシュマップからResourceLocationを取得
      * @param path テクスチャのパス
      */
-    protected ResourceLocation getResourceLocationFromPath(String path)
+    public static ResourceLocation getResourceLocationFromPath(String path)
     {
         if(path == null || path == "")
         {
@@ -235,6 +235,96 @@ public class RenderAliceDoll extends RenderBiped
         }
     }
 
+    @Override
+    protected int func_130006_a(EntityLiving par1EntityLiving, int par2, float par3)
+    {
+        ItemStack itemstack = par1EntityLiving.func_130225_q(3 - par2);
+
+        if (itemstack != null)
+        {
+            Item item = itemstack.getItem();
+
+            if (item instanceof ItemArmor)
+            {
+                EntityAliceDoll entityDoll = (EntityAliceDoll)par1EntityLiving;
+                int dollID = entityDoll.getDollID();
+                ItemArmor itemarmor = (ItemArmor)item;
+                this.func_110776_a(getResourceLocationFromPath(
+                                       DollRegistry.getArmorTexturePath(
+                                           dollID,
+                                           itemarmor.renderIndex,
+                                           par2, null)));
+                ModelBiped modelbiped = par2 == 2 ? this.field_82425_h : this.field_82423_g;
+                modelbiped.bipedHead.showModel = par2 == 0;
+                modelbiped.bipedHeadwear.showModel = par2 == 0;
+                modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
+                modelbiped.bipedRightArm.showModel = par2 == 1;
+                modelbiped.bipedLeftArm.showModel = par2 == 1;
+                modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
+                modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
+                modelbiped = ForgeHooksClient.getArmorModel(par1EntityLiving, itemstack, par2, modelbiped);
+                this.setRenderPassModel(modelbiped);
+                modelbiped.onGround = this.mainModel.onGround;
+                modelbiped.isRiding = this.mainModel.isRiding;
+                modelbiped.isChild = this.mainModel.isChild;
+                float f1 = 1.0F;
+
+                //Move out of if to allow for more then just CLOTH to have color
+                int j = itemarmor.getColor(itemstack);
+                if (j != -1)
+                {
+                    float f2 = (float)(j >> 16 & 255) / 255.0F;
+                    float f3 = (float)(j >> 8 & 255) / 255.0F;
+                    float f4 = (float)(j & 255) / 255.0F;
+                    GL11.glColor3f(f1 * f2, f1 * f3, f1 * f4);
+
+                    if (itemstack.isItemEnchanted())
+                    {
+                        return 31;
+                    }
+
+                    return 16;
+                }
+
+                GL11.glColor3f(f1, f1, f1);
+
+                if (itemstack.isItemEnchanted())
+                {
+                    return 15;
+                }
+
+                return 1;
+            }
+        }
+
+        return -1;
+    }
+
+    @Override
+    protected void func_130013_c(EntityLiving par1EntityLiving, int par2, float par3)
+    {
+        ItemStack itemstack = par1EntityLiving.func_130225_q(3 - par2);
+
+        if (itemstack != null)
+        {
+            Item item = itemstack.getItem();
+
+            if (item instanceof ItemArmor)
+            {
+                EntityAliceDoll entityDoll = (EntityAliceDoll)par1EntityLiving;
+                int dollID = entityDoll.getDollID();
+                ItemArmor itemarmor = (ItemArmor)item;
+                this.func_110776_a(getResourceLocationFromPath(
+                                       DollRegistry.getArmorTexturePath(
+                                           dollID,
+                                           itemarmor.renderIndex,
+                                           par2,
+                                           "_overlay")));
+                float f1 = 1.0F;
+                GL11.glColor3f(f1, f1, f1);
+            }
+        }
+    }
 
     @Override
     public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)

@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import mods.touhou_alice_dolls.*;
+import mods.touhou_alice_dolls.dolls.*;
 
 @SideOnly(Side.CLIENT)
 public class ModelAliceDoll extends ModelBiped
@@ -25,6 +26,9 @@ public class ModelAliceDoll extends ModelBiped
     
     /** ボックス拡張係数 */
     private float expansion;
+
+    /** モデル種別 */
+    private EnumRenderType renderType = EnumRenderType.BIPED;
 
     public ModelAliceDoll()
     {
@@ -63,6 +67,11 @@ public class ModelAliceDoll extends ModelBiped
     private float legZOffset(boolean isSneak)
     {
         return isSneak ? 2.0F : 0.1F;
+    }
+
+    public void setRenderType(EnumRenderType type)
+    {
+        renderType = type;
     }
     
     /**
@@ -371,12 +380,19 @@ public class ModelAliceDoll extends ModelBiped
 
         if (this.isRiding)
         {
-            this.bipedRightArm.rotateAngleX += -((float)Math.PI / 5F);
-            this.bipedLeftArm.rotateAngleX += -((float)Math.PI / 5F);
-            this.bipedRightLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            this.bipedLeftLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
-            this.bipedRightLeg.rotateAngleY = ((float)Math.PI / 10F);
-            this.bipedLeftLeg.rotateAngleY = -((float)Math.PI / 10F);
+            if(renderType == EnumRenderType.DOLL)
+            {
+                // 座るモーションは無効
+            }
+            else
+            {
+                this.bipedRightArm.rotateAngleX += -((float)Math.PI / 5F);
+                this.bipedLeftArm.rotateAngleX += -((float)Math.PI / 5F);
+                this.bipedRightLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
+                this.bipedLeftLeg.rotateAngleX = -((float)Math.PI * 2F / 5F);
+                this.bipedRightLeg.rotateAngleY = ((float)Math.PI / 10F);
+                this.bipedLeftLeg.rotateAngleY = -((float)Math.PI / 10F);
+            }
         }
 
         if (this.heldItemLeft != 0)

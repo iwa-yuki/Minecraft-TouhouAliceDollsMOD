@@ -26,6 +26,7 @@ public class DollRegistry
         dollList = new DollBase[256];
 
         dollList[0] = new DollBase();
+        dollList[1] = new DollShanghai();
     }
 
     /**
@@ -99,14 +100,15 @@ public class DollRegistry
     /**
      * IDを指定して防具テクスチャのパスを取得
      * @param id 人形のID
-     * @param type 防具の種類
-     * @param layer 防具のレイヤー
+     * @param type 防具の素材
+     * @param slot 防具の種類
+     * @param var テクスチャのバリエーション
      * @return 防具テクスチャのパス
      */
-    static public String getMainTexturePath(int id, String type, int layer)
+    static public String getArmorTexturePath(int id, int type, int slot, String var)
     {
         return isExist(id) ?
-            dollList[id].getArmorTexturePath(type, layer) : null;
+            dollList[id].getArmorTexturePath(type, slot, var) : null;
     }
 
     /**
@@ -136,7 +138,34 @@ public class DollRegistry
 
         return 0.7F;
     }
+    
+    /**
+     * 人形の体力を取得
+     * @param id 人形のID
+     */
+    static public double getHealth(int id)
+    {
+        if(isExist(id))
+        {
+            return dollList[id].getHealth();
+        }
 
+        return 20.0D;
+    }
+    /**
+     * 人形の移動速度を取得
+     * @param id 人形のID
+     */
+    static public double getSpeed(int id)
+    {
+        if(isExist(id))
+        {
+            return dollList[id].getSpeed();
+        }
+
+        return 0.25D;
+    }
+    
     /**
      * 人形のAIを初期化する必要があるときに呼ばれる
      * @param id 人形のID
@@ -171,6 +200,16 @@ public class DollRegistry
     static public ItemStack getHeldItem(int id)
     {
         return isExist(id) ? dollList[id].getHeldItem() : null;
+    }
+
+    /**
+     * インベントリのサイズを取得する
+     * @param id 人形のID
+     * @return インベントリのサイズ
+     */
+    static public int getSizeInventory(int id)
+    {
+        return isExist(id) ? dollList[id].getSizeInventory() : 9;
     }
 
     @SideOnly(Side.CLIENT)

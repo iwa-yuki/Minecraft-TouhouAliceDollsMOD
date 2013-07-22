@@ -53,12 +53,14 @@ public class DollBase
 
     /**
      * 防具テクスチャのパス
-     * @param type 防具の種類
-     * @param layer 防具のレイヤー
+     * @param type 防具の素材
+     * @param slot 防具の種類
+     * @param var テクスチャのバリエーション
      */
-    public String getArmorTexturePath(String type, int layer)
+    public String getArmorTexturePath(int type, int slot ,String var)
     {
-        return "";
+        return String.format("textures/dolls/armor/%d_%d%s.png",type, (slot<=1?1:2),
+                             (var == null ? "" : var));
     }
 
     /**
@@ -92,11 +94,27 @@ public class DollBase
     }
 
     /**
+     * 人形の体力を取得する
+     */
+    public double getHealth()
+    {
+        return 8.0D;
+    }
+    
+    /**
+     * 人形の移動速度を取得する
+     */
+    public double getSpeed()
+    {
+        return 0.25D;
+    }
+    
+    /**
      * 手持ちアイテムを取得する
      */
     public ItemStack getHeldItem()
     {
-        return new ItemStack(Item.swordGold);
+        return null;
     }
 
     /**
@@ -104,6 +122,14 @@ public class DollBase
      */
     public void onInitializeAI()
     {
+    }
+
+    /**
+     * インベントリのサイズを取得する
+     */
+    public int getSizeInventory()
+    {
+        return 9;
     }
 
     @SideOnly(Side.CLIENT)
@@ -114,6 +140,8 @@ public class DollBase
     {
         ModelAliceDoll model = new ModelAliceDoll(expand);
 
+        model.setRenderType(getRenderType());
+
         model.addBox(0, 4, false, -2F, -4F, -2F, 4, 4, 4, 0F,
                      0F, 14F, 0F, 0F, 0F, 0F, "head", null);
         model.addBox(0, 0, false, -3F, -1.2F, -0.8F, 6, 3, 1, 0.1F,
@@ -122,6 +150,8 @@ public class DollBase
                      0F, 14F, 0F, 0F, 0F, 0F, "body", null);
         model.addBox(16, 6, false, -3F, 4F, -2F, 6, 2, 4, 0F,
                      0F, 14F, 0F, 0F, 0F, 0F, "skirt1", "body");
+        model.addBox(16, 12, false, -4F, 6F, -3F, 8, 2, 6, 0F,
+                     0F, 14F, 0F, 0F, 0F, 0F, "skirt2", "body");
         model.addBox(0, 12, false, -2F, -1F, -1F, 2, 4, 2, 0F,
                      -2F, 15F, 0F, 0F, 0F, 0F, "rightarm", null);
         model.addBox(8, 12, false, 0F, -1F, -1F, 2, 4, 2, 0F,
