@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import mods.touhou_alice_dolls.client.*;
+import mods.touhou_alice_dolls.EntityAliceDoll;
 
 /**
  * 人形管理クラス
@@ -27,6 +28,8 @@ public class DollRegistry
 
         dollList[0] = new DollBase();
         dollList[1] = new DollShanghai();
+        dollList[2] = new DollHorai();
+        dollList[3] = new DollOoedo();
     }
 
     /**
@@ -170,11 +173,11 @@ public class DollRegistry
      * 人形のAIを初期化する必要があるときに呼ばれる
      * @param id 人形のID
      */
-    static public void onInitializeAI(int id)
+    static public void onInitializeAI(int id, EntityAliceDoll doll)
     {
         if(isExist(id))
         {
-            dollList[id].onInitializeAI();
+            dollList[id].onInitializeAI(doll);
         }
     }
 

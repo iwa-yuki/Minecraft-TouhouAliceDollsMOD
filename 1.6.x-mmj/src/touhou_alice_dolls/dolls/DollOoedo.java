@@ -20,24 +20,24 @@ import mods.touhou_alice_dolls.TouhouAliceDolls;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
 /**
- * 上海人形クラス
+ * 大江戸人形クラス
  */
-public class DollShanghai extends DollBase
+public class DollOoedo extends DollBase
 {
-    public DollShanghai()
+    public DollOoedo()
     {
         // アイテムの表示名を設定
         LanguageRegistry.instance().addStringLocalization(
-            "item.alicedoll.shanghai.name", "en_US", "Shanghai Doll");
+            "item.alicedoll.ooedo.name", "en_US", "Ooedo Doll");
         LanguageRegistry.instance().addStringLocalization(
-            "item.alicedoll.shanghai.name", "ja_JP", "上海人形");
+            "item.alicedoll.ooedo.name", "ja_JP", "大江戸人形");
     }
     
     /** 人形の名前 */
     @Override
     public String getDollName()
     {
-        return "shanghai";
+        return "ooedo";
     }
 
     /** 人形アイテムのアイコン名 */
@@ -53,7 +53,7 @@ public class DollShanghai extends DollBase
     @Override
     public String getMainTexturePath()
     {
-        return "textures/dolls/shanghai.png";
+        return "textures/dolls/ooedo.png";
     }
 
     /**
@@ -64,10 +64,10 @@ public class DollShanghai extends DollBase
     {
         GameRegistry.addRecipe(new ItemStack(TouhouAliceDolls.instance.itemAliceDoll, 1,
                                              DollRegistry.getDollID(getDollName())),
-                               "SW ",
+                               "TW ",
                                "WHW",
                                " W ",
-                               'S', new ItemStack(Item.swordGold),
+                               'T', new ItemStack(Block.tnt),
                                'W', new ItemStack(Block.cloth),
                                'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
     }
@@ -78,7 +78,7 @@ public class DollShanghai extends DollBase
     @Override
     public ItemStack getHeldItem()
     {
-        return new ItemStack(Item.swordGold);
+        return new ItemStack(Block.tnt);
     }
 
     /**

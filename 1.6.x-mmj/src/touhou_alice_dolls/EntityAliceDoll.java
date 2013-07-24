@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Iterator;
 
 import mods.touhou_alice_dolls.dolls.*;
+import mods.touhou_alice_dolls.AI.*;
 
 public class EntityAliceDoll extends EntityLiving implements IInventory
 {
@@ -74,7 +75,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
             this.func_110148_a(SharedMonsterAttributes.field_111263_d).func_111128_a(
                 DollRegistry.getSpeed(localDollID));
 
-            DollRegistry.onInitializeAI(localDollID);
+            DollRegistry.onInitializeAI(localDollID, this);
             
             isInitialized = true;
             FMLLog.info("%s : Doll(%s[%s]) is initialized.",
@@ -82,6 +83,11 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                         DollRegistry.getDollName(localDollID),
                         entityId);
         }
+    }
+
+    public void addAI(int index, EntityDollAIBase ai)
+    {
+        this.tasks.addTask(index, ai);
     }
 
     ////////////////////////////////////////////////////////////////////////////

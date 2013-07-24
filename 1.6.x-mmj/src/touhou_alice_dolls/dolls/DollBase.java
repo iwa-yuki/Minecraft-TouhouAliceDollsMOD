@@ -15,7 +15,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import mods.touhou_alice_dolls.client.*;
+import mods.touhou_alice_dolls.AI.*;
 import mods.touhou_alice_dolls.TouhouAliceDolls;
+import mods.touhou_alice_dolls.EntityAliceDoll;
 
 /**
  * 人形のベースクラス
@@ -120,8 +122,13 @@ public class DollBase
     /**
      * AIの初期化が必要なときに呼ばれる
      */
-    public void onInitializeAI()
+    public void onInitializeAI(EntityAliceDoll doll)
     {
+        doll.addAI(0, new EntityDollAISwimming(doll));
+        doll.addAI(13, new EntityDollAIWander(doll));
+        doll.addAI(14, new EntityDollAIWatchOwner(doll));
+        doll.addAI(15, new EntityDollAIWatchClosest(doll));
+        doll.addAI(16, new EntityDollAILookIdle(doll));
     }
 
     /**
