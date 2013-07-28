@@ -30,6 +30,10 @@ public class DollRegistry
         dollList[1] = new DollShanghai();
         dollList[2] = new DollHorai();
         dollList[3] = new DollOoedo();
+        dollList[4] = new DollRussia();
+        dollList[5] = new DollGermany();
+        dollList[6] = new DollLondon();
+        dollList[11] = new DollMarisa();
     }
 
     /**

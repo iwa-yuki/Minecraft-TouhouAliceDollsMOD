@@ -355,9 +355,9 @@ public class ModelAliceDoll extends ModelBiped
      */
     private void setRotation(ModelRenderer model, float x, float y, float z)
     {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
+        model.rotateAngleX = x / (180F / (float)Math.PI);
+        model.rotateAngleY = y / (180F / (float)Math.PI);
+        model.rotateAngleZ = z / (180F / (float)Math.PI);
     }
 
     @Override
@@ -411,15 +411,25 @@ public class ModelAliceDoll extends ModelBiped
         this.bipedLeftArm.rotateAngleY = 0.0F;
         float f6;
         float f7;
+        float shoulderWidth = 3;
+
+        if(renderType == EnumRenderType.DOLL)
+        {
+            shoulderWidth = 2.0F;
+        }
+        else if(renderType == EnumRenderType.TALL)
+        {
+            shoulderWidth = 3.0F;
+        }
 
         if (this.onGround > -9990.0F)
         {
             f6 = this.onGround;
             this.bipedBody.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f6) * (float)Math.PI * 2.0F) * 0.2F;
-            this.bipedRightArm.rotationPointZ = MathHelper.sin(this.bipedBody.rotateAngleY) * 2.0F;
-            this.bipedRightArm.rotationPointX = -MathHelper.cos(this.bipedBody.rotateAngleY) * 2.0F;
-            this.bipedLeftArm.rotationPointZ = -MathHelper.sin(this.bipedBody.rotateAngleY) * 2.0F;
-            this.bipedLeftArm.rotationPointX = MathHelper.cos(this.bipedBody.rotateAngleY) * 2.0F;
+            this.bipedRightArm.rotationPointZ = MathHelper.sin(this.bipedBody.rotateAngleY) * shoulderWidth;
+            this.bipedRightArm.rotationPointX = -MathHelper.cos(this.bipedBody.rotateAngleY) * shoulderWidth;
+            this.bipedLeftArm.rotationPointZ = -MathHelper.sin(this.bipedBody.rotateAngleY) * shoulderWidth;
+            this.bipedLeftArm.rotationPointX = MathHelper.cos(this.bipedBody.rotateAngleY) * shoulderWidth;
             this.bipedRightArm.rotateAngleY += this.bipedBody.rotateAngleY;
             this.bipedLeftArm.rotateAngleY += this.bipedBody.rotateAngleY;
             this.bipedLeftArm.rotateAngleX += this.bipedBody.rotateAngleY;

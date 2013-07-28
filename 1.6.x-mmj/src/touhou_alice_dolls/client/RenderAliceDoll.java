@@ -6,6 +6,8 @@ package mods.touhou_alice_dolls.client;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
@@ -131,6 +133,11 @@ public class RenderAliceDoll extends RenderBiped
 
             if (itemstack1.getItem() instanceof ItemBlock)
             {
+                if(renderType == EnumRenderType.TALL)
+                {
+                    GL11.glScalef(0.65F, 0.65F, 0.65F);
+                }
+
                 if (is3D || RenderBlocks.renderItemIn3d(
                         Block.blocksList[itemstack1.itemID].getRenderType()))
                 {
@@ -144,6 +151,11 @@ public class RenderAliceDoll extends RenderBiped
             }
             else if (itemstack1.getItem().itemID == Item.skull.itemID)
             {
+                if(renderType == EnumRenderType.TALL)
+                {
+                    GL11.glScalef(0.73F, 0.73F, 0.73F);
+                }
+
                 f2 = 1.0625F;
                 GL11.glScalef(f2, -f2, -f2);
                 String s = "";
@@ -173,7 +185,11 @@ public class RenderAliceDoll extends RenderBiped
                 GL11.glTranslatef(-0.0625F, 0.1F, -0.03125F);
                 GL11.glScalef(0.4F, 0.4F, 0.4F);
             }
-
+            else if(renderType == EnumRenderType.TALL)
+            {
+                GL11.glTranslatef(-0.0625F, 0.25F, 0F);
+                GL11.glScalef(0.75F, 0.75F, 0.75F);
+            }
 
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, EQUIPPED);
             boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(EQUIPPED, itemstack, BLOCK_3D));
@@ -327,11 +343,22 @@ public class RenderAliceDoll extends RenderBiped
     }
 
     @Override
+    protected void preRenderCallback(EntityLivingBase par1EntityLivingBase, float par2)
+    {
+        this.mainModel.isRiding = this.field_82423_g.isRiding = this.field_82425_h.isRiding =
+            (par1EntityLivingBase.ridingEntity != null)
+            && !(par1EntityLivingBase.ridingEntity instanceof EntityPlayer);
+        if (this.renderPassModel != null)
+        {
+            this.renderPassModel.isRiding = this.mainModel.isRiding;
+        }
+    }
+    
+    @Override
     public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
         EntityAliceDoll entityDoll = (EntityAliceDoll)par1EntityLiving;
         int dollID = entityDoll.getDollID();
-
         this.mainModel = this.modelBipedMain = mainModels[dollID];
         this.field_82423_g = armorLayer1Models[dollID];
         this.field_82425_h = armorLayer2Models[dollID];

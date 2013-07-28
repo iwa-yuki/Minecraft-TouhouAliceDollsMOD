@@ -70,13 +70,14 @@ public class DollBase
      */
     public void addRecipes()
     {
-        GameRegistry.addRecipe(new ItemStack(TouhouAliceDolls.instance.itemAliceDoll, 1,
-                                             DollRegistry.getDollID(getDollName())),
-                               " W ",
-                               "WHW",
-                               " W ",
-                               'W', new ItemStack(Block.cloth),
-                               'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
+        GameRegistry.addRecipe(
+            new ItemStack(TouhouAliceDolls.instance.itemAliceDoll, 1,
+                          DollRegistry.getDollID(getDollName())),
+            " W ",
+            "WHW",
+            " W ",
+            'W', Block.cloth,
+            'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
     }
 
     /**
@@ -125,6 +126,7 @@ public class DollBase
     public void onInitializeAI(EntityAliceDoll doll)
     {
         doll.addAI(0, new EntityDollAISwimming(doll));
+        doll.addAI(12, new EntityDollAIFollowOwner(doll));
         doll.addAI(13, new EntityDollAIWander(doll));
         doll.addAI(14, new EntityDollAIWatchOwner(doll));
         doll.addAI(15, new EntityDollAIWatchClosest(doll));

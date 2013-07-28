@@ -67,8 +67,8 @@ public class DollOoedo extends DollBase
                                "TW ",
                                "WHW",
                                " W ",
-                               'T', new ItemStack(Block.tnt),
-                               'W', new ItemStack(Block.cloth),
+                               'T', Block.tnt,
+                               'W', Block.cloth,
                                'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
     }
 
@@ -88,5 +88,9 @@ public class DollOoedo extends DollBase
     public void onInitializeAI(EntityAliceDoll doll)
     {
         super.onInitializeAI(doll);
+
+        doll.addAI(4, new EntityDollAIExplode(doll));
+        doll.addAI(8, new EntityDollAILevelingBlock(doll));
+        doll.addAI(9, new EntityDollAIMineBlock(doll));
     }
 }

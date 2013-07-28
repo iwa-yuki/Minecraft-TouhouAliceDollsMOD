@@ -24,7 +24,8 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraftforge.common.Configuration;
 
-import mods.touhou_alice_dolls.dolls.DollRegistry;
+import mods.touhou_alice_dolls.dolls.*;
+import mods.touhou_alice_dolls.AI.*;
 
 /**
  * アリスの人形MOD メインクラス
@@ -75,6 +76,64 @@ public class TouhouAliceDolls
                 "itemDollCoreID", 5000).getInt();
             this.itemAliceDollID = cfg.getItem(
                 "itemAliceDollID", 5001).getInt();
+
+            EntityDollAISearchTarget.searchRange =
+                cfg.get("DollAISearchTarget", "searchRange", 16.0D).getDouble(16.0D);
+            EntityDollAISearchTarget.searchHeight =
+                cfg.get("DollAISearchTarget", "searchHeight", 4.0D).getDouble(4.0D);
+            EntityDollAISearchTarget.searchEntityRegex =
+                cfg.get("DollAISearchTarget", "searchEntityRegex", "\\A(?!AliceDoll).*").getString();
+            EntityDollAISearchTarget.targetEntityRegex =
+                cfg.get("DollAISearchTarget", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch").getString();
+
+            EntityDollAIAttackTarget.targetEntityRegex =
+                cfg.get("DollAIAttackTarget", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch").getString();
+            EntityDollAIAttackTarget.attackStrength =
+                cfg.get("DollAIAttackTarget", "attackStrength", 2).getInt();
+            EntityDollAIExplode.searchRange =
+                cfg.get("DollAIExplode", "searchRange", 16.0D).getDouble(16.0D);
+            EntityDollAIExplode.searchHeight =
+                cfg.get("DollAIExplode", "searchHeight", 4.0D).getDouble(4.0D);
+            EntityDollAIExplode.targetEntityRegex =
+                cfg.get("DollAIExplode", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch").getString();
+            EntityDollAIExplode.explodeStrength =
+                (float)(cfg.get("DollAIExplode", "explodeStrength", 3.0D).getDouble(3.0D));
+            EntityDollAIExplode.mobGriefing = 
+                cfg.get("DollAIExplode", "mobGriefing", true).getBoolean(true);
+
+            EntityDollAICollectItem.searchRange =
+                cfg.get("DollAICollectItem", "searchRange", 16.0D).getDouble(16.0D);
+            EntityDollAICollectItem.searchHeight =
+                cfg.get("DollAICollectItem", "searchHeight", 4.0D).getDouble(4.0D);
+            EntityDollAICollectItem.canCollectRange =
+                (float)(cfg.get("DollAICollectItem", "canCollectRange", 2.0D).getDouble(2.0D));
+
+            EntityDollAITorcher.lightThreshold =
+                cfg.get("DollAITorcher", "lightThreshold", 5).getInt();
+
+            EntityDollAISearchBlock.targetBlockRegex =
+                cfg.get("DollAISearchBlock", "targetBlockRegex", "ore.+|netherquartz").getString();
+            EntityDollAISearchBlock.mineRange =
+                EntityDollAILevelingBlock.mineRange =
+                cfg.get("DollAISearchBlock", "mineRange", 3).getInt();
+
+            EntityDollAIMineBlock.mineSpeed = 
+                cfg.get("DollAIMineBlock", "mineSpeed", 2.5D).getDouble(2.5D);
+
+            EntityDollAILevelingBlock.levelingBlockRegex =
+                cfg.get("DollAILevelingBlock", "levelingBlockRegex", "stone|grass|dirt|sand|gravel|sandstone").getString();
+
+            EntityDollAIMineBlock.mineSpeed = 
+                cfg.get("DollAIMineBlock", "mineSpeed", 2.5D).getDouble(2.5D);
+
+            EntityDollAICutTree.logBlockRegex =
+                cfg.get("DollAICutTree", "logBlockRegex", "log|mushroom").getString();
+            EntityDollAICutTree.leavesBlockRegex =
+                cfg.get("DollAICutTree", "leavesBlockRegex", "leaves|mushroom|vine").getString();
+            EntityDollAICutTree.cutRange =
+                cfg.get("DollAICutTree", "cutRange", 5).getInt();
+            EntityDollAICutTree.cutSpeed =
+                cfg.get("DollAICutTree", "cutSpeed", 2.5D).getDouble(2.5D);
         }
         catch (Exception e)
         {

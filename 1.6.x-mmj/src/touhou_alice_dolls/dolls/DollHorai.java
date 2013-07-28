@@ -67,8 +67,8 @@ public class DollHorai extends DollBase
                                "SW ",
                                "WHW",
                                " W ",
-                               'S', new ItemStack(Item.pickaxeGold),
-                               'W', new ItemStack(Block.cloth),
+                               'S', Item.pickaxeGold,
+                               'W', Block.cloth,
                                'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
     }
 
@@ -88,5 +88,8 @@ public class DollHorai extends DollBase
     public void onInitializeAI(EntityAliceDoll doll)
     {
         super.onInitializeAI(doll);
+
+        doll.addAI(7, new EntityDollAISearchBlock(doll));
+        doll.addAI(9, new EntityDollAIMineBlock(doll));
     }
 }

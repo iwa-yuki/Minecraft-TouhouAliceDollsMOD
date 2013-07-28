@@ -40,6 +40,11 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     private boolean isInitialized;
     protected ItemStack mainHeldItem;
 
+    public int targetX;
+    public int targetY;
+    public int targetZ;
+    public boolean isTargetLockon; 
+
     ////////////////////////////////////////////////////////////////////////////
     // 初期化
     
@@ -49,6 +54,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 
         localDollID = -1;
         isInitialized = false;
+        getNavigator().setAvoidsWater(true);
 
         inventory = new ItemStack[getSizeInventory()];
     }
@@ -76,6 +82,13 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                 DollRegistry.getSpeed(localDollID));
 
             DollRegistry.onInitializeAI(localDollID, this);
+            ItemStack[] newInventory = new ItemStack[DollRegistry.getSizeInventory(localDollID)];
+            int len = inventory.length > newInventory.length ? newInventory.length : inventory.length;
+            for(int i=0;i<len;++i)
+            {
+                newInventory[i] = inventory[i];
+            }
+            inventory = newInventory;
             
             isInitialized = true;
             FMLLog.info("%s : Doll(%s[%s]) is initialized.",
@@ -195,6 +208,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                     }
                 }
             }
+            onInventoryChanged();
         }
     }
 
@@ -323,13 +337,14 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 	@Override
 	public double getYOffset()
 	{
-		if(ridingEntity != null)
-		{
+        if(ridingEntity != null)
+        {
             if(ridingEntity instanceof EntityPlayer)
             {
                 return (double)(yOffset - 1.1F);
             }
-		}
+        }
+
 		return super.getYOffset();
 	}
 
@@ -625,10 +640,10 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
             if(!isOwner(ridingEntity))
             {
                 EntityPlayer owner = getOwnerEntity();
-                // if(owner != null && owner.riddenByEntity != null)
-                // {
-                //     owner.riddenByEntity.mountEntity(null);
-                // }
+                if(owner != null && owner.riddenByEntity != null)
+                {
+                    owner.riddenByEntity.mountEntity(null);
+                }
                 this.mountEntity(owner);
             }
             chatMessage(getDollName()+" : Rideon mode", 2);
@@ -1063,7 +1078,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     protected void readInventoryFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
-        this.inventory = new ItemStack[this.getSizeInventory()];
+        this.inventory = new ItemStack[getSizeInventory()];
         for (int i = 0; i < nbttaglist.tagCount(); ++i)
         {
             NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
@@ -1072,6 +1087,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
             if (j >= 0 && j < this.inventory.length)
             {
                 this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                // System.out.println("read" + this.inventory[j]);
             }
         }
         onInventoryChanged();
@@ -1089,6 +1105,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                 nbttagcompound1.setByte("Slot", (byte)i);
                 this.inventory[i].writeToNBT(nbttagcompound1);
                 nbttaglist.appendTag(nbttagcompound1);
+                // System.out.println("write" + this.inventory[i]);
             }
         }
         par1NBTTagCompound.setTag("Items", nbttaglist);

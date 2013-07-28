@@ -20,24 +20,24 @@ import mods.touhou_alice_dolls.TouhouAliceDolls;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
 /**
- * 上海人形クラス
+ * 露西亜人形クラス
  */
-public class DollShanghai extends DollBase
+public class DollRussia extends DollBase
 {
-    public DollShanghai()
+    public DollRussia()
     {
         // アイテムの表示名を設定
         LanguageRegistry.instance().addStringLocalization(
-            "item.alicedoll.shanghai.name", "en_US", "Shanghai Doll");
+            "item.alicedoll.russia.name", "en_US", "Russia Doll");
         LanguageRegistry.instance().addStringLocalization(
-            "item.alicedoll.shanghai.name", "ja_JP", "上海人形");
+            "item.alicedoll.russia.name", "ja_JP", "露西亜人形");
     }
     
     /** 人形の名前 */
     @Override
     public String getDollName()
     {
-        return "shanghai";
+        return "russia";
     }
 
     /** 人形アイテムのアイコン名 */
@@ -46,14 +46,22 @@ public class DollShanghai extends DollBase
     {
         return this.getDollName();
     }
-    
+
     /**
      * メインテクスチャのパス
      */
     @Override
     public String getMainTexturePath()
     {
-        return "textures/dolls/shanghai.png";
+        return "textures/dolls/russia.png";
+    }
+
+    /**
+     * インベントリのサイズを取得する
+     */
+    public int getSizeInventory()
+    {
+        return 36;
     }
 
     /**
@@ -64,10 +72,10 @@ public class DollShanghai extends DollBase
     {
         GameRegistry.addRecipe(new ItemStack(TouhouAliceDolls.instance.itemAliceDoll, 1,
                                              DollRegistry.getDollID(getDollName())),
-                               "SW ",
+                               "CW ",
                                "WHW",
                                " W ",
-                               'S', Item.swordGold,
+                               'C', Block.chest,
                                'W', Block.cloth,
                                'H', new ItemStack(TouhouAliceDolls.instance.itemDollCore));
     }
@@ -78,7 +86,7 @@ public class DollShanghai extends DollBase
     @Override
     public ItemStack getHeldItem()
     {
-        return new ItemStack(Item.swordGold);
+        return new ItemStack(Block.chest);
     }
 
     /**
@@ -89,8 +97,7 @@ public class DollShanghai extends DollBase
     {
         super.onInitializeAI(doll);
 
-        doll.addAI(1, new EntityDollAISearchTarget(doll));
-        doll.addAI(2, new EntityDollAIAttackTarget(doll));
-        doll.addAI(3, new EntityDollAIStealItem(doll));
+        doll.addAI(5, new EntityDollAICollectItem(doll));
+        doll.addAI(6, new EntityDollAITorcher(doll));
     }
 }
