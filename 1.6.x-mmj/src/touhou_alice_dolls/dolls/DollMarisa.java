@@ -60,6 +60,18 @@ public class DollMarisa extends DollBase
     }
 
     /**
+     * 防具テクスチャのパス
+     * @param type 防具の素材
+     * @param slot 防具の種類
+     * @param var テクスチャのバリエーション
+     */
+    public String getArmorTexturePath(int type, int slot ,String var)
+    {
+        return String.format("textures/dolls/armor/tall/%d_%d%s.png",type, (slot<=1?1:2),
+                             (var == null ? "" : var));
+    }
+
+    /**
      * 人形のレシピを追加する
      */
     @Override
@@ -87,7 +99,7 @@ public class DollMarisa extends DollBase
     @Override
     public ItemStack getHeldItem()
     {
-        ItemStack mrsHeldItem = new ItemStack(Block.mushroomRed);
+        ItemStack mrsHeldItem = null; //new ItemStack(Block.mushroomRed);
         try
         {
             Class<?> c = Class.forName(
@@ -95,11 +107,11 @@ public class DollMarisa extends DollBase
             Field f = c.getField("hakkeroItem");
             Object obj = f.get(null);
             mrsHeldItem = new ItemStack((Item)obj);
-            FMLLog.info("Found thKaguya MOD!");
+            FMLLog.info("Found \"thKaguya.hakkeroItem\"!");
         }
         catch(Exception e)
         {
-            FMLLog.info("Not found thKaguya MOD.");
+            FMLLog.info("Not found \"thKaguya.hakkeroItem\".");
         }
         return mrsHeldItem;
     }

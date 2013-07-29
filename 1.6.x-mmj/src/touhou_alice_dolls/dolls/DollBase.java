@@ -61,7 +61,7 @@ public class DollBase
      */
     public String getArmorTexturePath(int type, int slot ,String var)
     {
-        return String.format("textures/dolls/armor/%d_%d%s.png",type, (slot<=1?1:2),
+        return String.format("textures/dolls/armor/doll/%d_%d%s.png",type, (slot<=1?1:2),
                              (var == null ? "" : var));
     }
 
