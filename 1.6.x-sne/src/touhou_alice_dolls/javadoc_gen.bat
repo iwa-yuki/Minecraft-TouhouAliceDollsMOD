@@ -1,0 +1,1 @@
+javadoc -d javadoc -encoding utf-8 -charset utf-8 -docencoding utf-8 *.java client\*.java dolls\*.java
