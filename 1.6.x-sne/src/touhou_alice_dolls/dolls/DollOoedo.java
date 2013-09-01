@@ -89,8 +89,7 @@ public class DollOoedo extends DollBase
     {
         super.onInitializeAI(doll);
 
-        doll.addAI(4, new EntityDollAIExplode(doll));
-        doll.addAI(8, new EntityDollAILevelingBlock(doll));
-        doll.addAI(9, new EntityDollAIMineBlock(doll));
+        doll.addAI(4, new EntityDollAIExplosion(doll));
+        doll.addAI(8, new EntityDollAIQuarry(doll));
     }
 }

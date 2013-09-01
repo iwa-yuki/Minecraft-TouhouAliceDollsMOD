@@ -5,12 +5,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
+/**
+ * 泳ぐ
+ */
 public class EntityDollAISwimming extends EntityDollAIBase
 {
     public EntityDollAISwimming(EntityAliceDoll doll)
     {
         super(doll);
-        this.setMutexBits(4);
+        this.setMutexBits(8);
         doll.getNavigator().setCanSwim(true);
     }
 

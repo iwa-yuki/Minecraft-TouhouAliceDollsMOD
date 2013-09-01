@@ -2,18 +2,27 @@ package mods.touhou_alice_dolls.AI;
 
 import net.minecraft.world.World;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.entity.player.EntityPlayer;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.DamageSource;
 
+import java.util.*;
+import java.util.regex.*;
+
 import mods.touhou_alice_dolls.THShotLibWrapper;
 
 public class EntityDollAIAttackWithBullet extends EntityDollAIBase
 {
+    public static double searchRange;
+    public static double searchHeight;
+    public static String targetEntityRegex;
+
     private PathNavigate pathfinder;
     private EntityLivingBase theTarget;
     private float speed;
@@ -43,18 +52,52 @@ public class EntityDollAIAttackWithBullet extends EntityDollAIBase
         {
             return false;
         }
-        theTarget = theDoll.getAttackTarget();
-        if(theTarget == null)
+        if(--counter > 0)
         {
             return false;
         }
+        counter = 20;
 
-        return true;
+        List<EntityLivingBase> targetList =
+            (List<EntityLivingBase>)(theWorld.getEntitiesWithinAABB(EntityLivingBase.class, theDoll.boundingBox.expand(searchRange, searchHeight, searchRange)));
+        Pattern targetPattern = Pattern.compile(targetEntityRegex);
+        Matcher targetMatcher;
+
+        theTarget = null;
+        for(EntityLivingBase e : targetList)
+        {
+            String name = EntityList.getEntityString(e);
+            if(name == null)
+            {
+                continue;
+            }
+
+            //攻撃対象設定
+            targetMatcher = targetPattern.matcher(name);
+            if(targetMatcher.find())
+            {
+                if(theTarget == null)
+                {
+                    theTarget = e;
+                }
+                else
+                {
+                    if(theDoll.getDistanceSqToEntity(theTarget)
+                       > theDoll.getDistanceSqToEntity(e))
+                    {
+                        theTarget = e;
+                    }
+                }
+            }
+        }
+
+        return theTarget != null;
     }
 
     @Override
     public void startExecuting()
     {
+        counter = 0;
     }
 
     @Override
@@ -80,6 +123,11 @@ public class EntityDollAIAttackWithBullet extends EntityDollAIBase
         {
             return false;
         }
+        if(this.pathfinder.noPath()
+           && !this.theDoll.getEntitySenses().canSee(this.theTarget))
+        {
+            return false;
+        }
         return true;
     }
 
@@ -93,8 +141,11 @@ public class EntityDollAIAttackWithBullet extends EntityDollAIBase
     @Override
     public void updateTask()
     {
-        if(this.theDoll.getEntitySenses().canSee(this.theTarget)
-           && this.theTarget.isEntityAlive())
+        if(!this.theTarget.isEntityAlive())
+        {
+            return;
+        }
+        if(this.theDoll.getEntitySenses().canSee(this.theTarget))
         {
             this.theDoll.getLookHelper().setLookPositionWithEntity(
                 this.theTarget, 10.0F, (float)this.theDoll.getVerticalFaceSpeed());
@@ -104,15 +155,20 @@ public class EntityDollAIAttackWithBullet extends EntityDollAIBase
         {
             this.counter = 20;
 
-            if(this.theDoll.getDistanceSqToEntity(this.theTarget) > 25f)
+            if(this.theDoll.getDistanceSqToEntity(this.theTarget) > 25f
+                || !this.theDoll.getEntitySenses().canSee(this.theTarget))
             {
                 this.pathfinder.tryMoveToEntityLiving(
                     this.theTarget, this.speed);
             }
+            else
+            {
+                this.pathfinder.clearPathEntity();
+            }
             if(this.theDoll.getEntitySenses().canSee(this.theTarget))
             {
                 double xDistance = theTarget.posX - theDoll.posX;
-    			double yDistance = theTarget.posY - (theDoll.posY+theDoll.getEyeHeight()/2);
+    			double yDistance = theTarget.posY - (theDoll.posY+0.5F);
     			double zDistance = theTarget.posZ - theDoll.posZ;
     			float angleXZ = 360F - ((float)Math.atan2(xDistance, zDistance)) / 3.141593F * 180F;
 				float angleY  = 360F - (float)Math.atan2( yDistance, Math.sqrt(xDistance * xDistance + zDistance * zDistance)) / 3.141593F * 180F;

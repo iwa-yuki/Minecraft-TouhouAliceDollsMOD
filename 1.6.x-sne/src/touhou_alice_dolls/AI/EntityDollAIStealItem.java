@@ -23,18 +23,22 @@ import java.util.regex.*;
 
 public class EntityDollAIStealItem extends EntityDollAIBase
 {
+    public static double searchRange;
+    public static double searchHeight;
+
     private PathNavigate pathfinder;
-    private EntityLivingBase theTarget;
     private float speed;
     private int counter;
     private boolean avoidsWater;
-
+    private EntityLivingBase theTarget;
+    
     public EntityDollAIStealItem(EntityAliceDoll doll)
     {
         super(doll);
         this.speed = 1.0F;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
+        counter = 0;
     }
 
     @Override
@@ -48,13 +52,122 @@ public class EntityDollAIStealItem extends EntityDollAIBase
         {
             return false;
         }
-        theTarget = theDoll.getAttackTarget();
-        if(theTarget == null)
+        if(--counter > 0)
         {
             return false;
         }
+        counter = 20;
 
-        return true;
+        List<EntityLivingBase> targetList =
+            (List<EntityLivingBase>)(theWorld.getEntitiesWithinAABB(EntityLivingBase.class, theDoll.boundingBox.expand(searchRange, searchHeight, searchRange)));
+
+        theTarget = null;
+        //羊から毛を集める
+        for(EntityLivingBase e : targetList)
+        {
+            if(e instanceof EntitySheep)
+            {
+                EntitySheep sheep = (EntitySheep)e;
+                if(sheep.getSheared() || sheep.isChild())
+                {
+                    continue;
+                }
+                if(theTarget == null)
+                {
+                    theTarget = e;
+                }
+                else if(theDoll.getDistanceSqToEntity(theTarget)
+                        > theDoll.getDistanceSqToEntity(e))
+                {
+                    theTarget = e;
+                }
+            }
+        }
+        if(theTarget != null)
+        {
+            return true;
+        }
+        //ニワトリから羽根を集める
+        if(theDoll.getRNG().nextFloat()<0.05F)
+        {
+            for(EntityLivingBase e : targetList)
+            {
+                if(e instanceof EntityChicken)
+                {
+                    EntityChicken chicken = (EntityChicken)e;
+                    if(chicken.isChild())
+                    {
+                        continue;
+                    }
+                    if(theTarget == null)
+                    {
+                        theTarget = e;
+                    }
+                    else if(theDoll.getDistanceSqToEntity(theTarget)
+                       > theDoll.getDistanceSqToEntity(e))
+                    {
+                        theTarget = e;
+                    }
+                }
+            }
+            if(theTarget != null)
+            {
+                return true;
+            }
+        }
+        //キノコ牛からキノコを集める
+        if(theDoll.getRNG().nextFloat()<0.05F)
+        {
+            for(EntityLivingBase e : targetList)
+            {
+                if(e instanceof EntityMooshroom)
+                {
+                    EntityMooshroom moo = (EntityMooshroom)e;
+                    if(moo.isChild())
+                    {
+                        continue;
+                    }
+                    if(theTarget == null)
+                    {
+                        theTarget = e;
+                    }
+                    else if(theDoll.getDistanceSqToEntity(theTarget)
+                       > theDoll.getDistanceSqToEntity(e))
+                    {
+                        theTarget = e;
+                    }
+                }
+            }
+            if(theTarget != null)
+            {
+                return true;
+            }
+        }
+        //アイアンゴーレムから花を集める
+        if(theDoll.getRNG().nextFloat()<0.05F)
+        {
+            for(EntityLivingBase e : targetList)
+            {
+                if(e instanceof EntityIronGolem)
+                {
+                    if(theTarget == null)
+                    {
+                        theTarget = e;
+                    }
+                    else if(theDoll.getDistanceSqToEntity(theTarget)
+                       > theDoll.getDistanceSqToEntity(e))
+                    {
+                        theTarget = e;
+                    }
+                }
+            }
+            if(theTarget != null)
+            {
+                return true;
+            }
+        }
+        
+        return theTarget != null;
     }
 
     @Override
@@ -80,11 +193,11 @@ public class EntityDollAIStealItem extends EntityDollAIBase
         {
             return false;
         }
-        if(this.theTarget == null)
+        if(theTarget == null)
         {
             return false;
         }
-        if(!this.theTarget.isEntityAlive())
+        if(!theTarget.isEntityAlive())
         {
             return false;
         }
@@ -94,7 +207,6 @@ public class EntityDollAIStealItem extends EntityDollAIBase
     @Override
     public void resetTask()
     {
-        this.theTarget = null;
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
     }
@@ -112,9 +224,9 @@ public class EntityDollAIStealItem extends EntityDollAIBase
         {
             this.counter = 20;
 
-            this.pathfinder.tryMoveToEntityLiving(this.theTarget, this.speed);
-            if(this.theDoll.getDistanceSqToEntity(this.theTarget) < 9f
-               && this.theDoll.getEntitySenses().canSee(this.theTarget))
+            this.pathfinder.tryMoveToEntityLiving(theTarget, this.speed);
+            if(this.theDoll.getDistanceSqToEntity(theTarget) < 9f
+               && this.theDoll.getEntitySenses().canSee(theTarget))
             {
                 if(theTarget instanceof EntitySheep)
                 {
@@ -142,7 +254,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
                 {
                     EntityChicken chicken = (EntityChicken)theTarget;
                     Random rand = theTarget.getRNG();
-                    if(!chicken.isChild() && theDoll.getRNG().nextFloat()<0.003f)
+                    if(!chicken.isChild())
                     {
                         theTarget.entityDropItem(new ItemStack(Item.feather,1), 0.0F);
                         theDoll.chatMessage(theDoll.getDollName() + " : Feather!",2);
@@ -155,7 +267,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
                 {
                     EntityMooshroom mooshroom = (EntityMooshroom)theTarget;
                     Random rand = theTarget.getRNG();
-                    if(!mooshroom.isChild() && theDoll.getRNG().nextFloat()<0.006f)
+                    if(!mooshroom.isChild())
                     {
                         theTarget.entityDropItem(new ItemStack(Block.mushroomRed,1), 0.0F);
                         theDoll.chatMessage(theDoll.getDollName() + " : Mushroom!",2);
@@ -171,14 +283,11 @@ public class EntityDollAIStealItem extends EntityDollAIBase
 
                     if(golem.getHoldRoseTick() == 0)
                     {
-                        if(theDoll.getRNG().nextFloat()<0.01f)
-                        {
-                            golem.setHoldingRose(true);
-                        }
+                        golem.setHoldingRose(true);
                     }
                     if(golem.getHoldRoseTick() != 0)
                     {
-                        if(golem.getEntitySenses().canSee(theDoll) && theDoll.getRNG().nextFloat()<0.01f)
+                        if(golem.getEntitySenses().canSee(theDoll) && theDoll.getRNG().nextFloat()<0.1f)
                         {
                             golem.setHoldingRose(false);
                             theTarget.entityDropItem(new ItemStack(Block.plantRed,1), 0.0F);

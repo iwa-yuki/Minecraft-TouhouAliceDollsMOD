@@ -23,7 +23,7 @@ import mods.touhou_alice_dolls.TouhouAliceDolls;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
 /**
- * 上海人形クラス
+ * 魔理沙人形クラス
  */
 public class DollMarisa extends DollBase
 {
@@ -163,8 +163,7 @@ public class DollMarisa extends DollBase
     public void onInitializeAI(EntityAliceDoll doll)
     {
         super.onInitializeAI(doll);
-        doll.addAI(1, new EntityDollAISearchTarget(doll));
-        doll.addAI(2, new EntityDollAIAttackWithBullet(doll));        
+        doll.addAI(1, new EntityDollAIAttackWithBullet(doll));
     }
     @SideOnly(Side.CLIENT)
     /**

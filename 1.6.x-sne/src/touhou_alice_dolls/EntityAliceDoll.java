@@ -40,11 +40,6 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     private boolean isInitialized;
     protected ItemStack mainHeldItem;
 
-    public int targetX;
-    public int targetY;
-    public int targetZ;
-    public boolean isTargetLockon; 
-
     ////////////////////////////////////////////////////////////////////////////
     // 初期化
     

@@ -5,6 +5,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
+/**
+ * ランダムに周りを見る
+ */
 public class EntityDollAILookIdle extends EntityDollAIBase
 {
     private double lookX;

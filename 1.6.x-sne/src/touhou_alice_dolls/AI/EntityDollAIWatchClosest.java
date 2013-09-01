@@ -5,6 +5,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
+/**
+ * 近くのモブを見る
+ */
 public class EntityDollAIWatchClosest extends EntityDollAIBase
 {
     protected Entity closestEntity;

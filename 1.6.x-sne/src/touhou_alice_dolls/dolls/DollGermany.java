@@ -90,5 +90,6 @@ public class DollGermany extends DollBase
         super.onInitializeAI(doll);
 
         doll.addAI(10, new EntityDollAICutTree(doll));
+        doll.addAI(11, new EntityDollAIPlantTree(doll));
     }
 }

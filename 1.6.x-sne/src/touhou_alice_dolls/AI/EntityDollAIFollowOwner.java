@@ -8,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 import net.minecraft.util.MathHelper;
 
+/**
+ * 持ち主を追いかける
+ */
 public class EntityDollAIFollowOwner extends EntityDollAIBase
 {
     private EntityPlayer theOwner;

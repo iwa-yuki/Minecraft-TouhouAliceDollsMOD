@@ -89,8 +89,8 @@ public class DollShanghai extends DollBase
     {
         super.onInitializeAI(doll);
 
-        doll.addAI(1, new EntityDollAISearchAndReportTarget(doll));
-        doll.addAI(2, new EntityDollAIAttackTarget(doll));
+        doll.addAI(1, new EntityDollAIReportEntity(doll));
+        doll.addAI(2, new EntityDollAIAttackEnemy(doll));
         doll.addAI(3, new EntityDollAIStealItem(doll));
     }
 }

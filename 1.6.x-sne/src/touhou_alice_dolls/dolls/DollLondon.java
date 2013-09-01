@@ -89,6 +89,6 @@ public class DollLondon extends DollBase
     {
         super.onInitializeAI(doll);
 
-        doll.addAI(11, new EntityDollAISearchSpawner(doll));
+        doll.addAI(11, new EntityDollAIReportArtifact(doll));
     }
 }

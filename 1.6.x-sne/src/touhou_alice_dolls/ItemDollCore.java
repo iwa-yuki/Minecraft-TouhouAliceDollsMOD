@@ -76,7 +76,8 @@ public class ItemDollCore extends Item
     public void onCharged(World world, Entity entity)
     {
         List<EntityAliceDoll> dolls = world.selectEntitiesWithinAABB(
-            EntityAliceDoll.class, entity.boundingBox.expand(64.0D, 64.0D, 64.0D),
+            EntityAliceDoll.class, entity.boundingBox.expand(
+                128.0D, 128.0D, 128.0D),
             new DollSelector((EntityPlayer)entity));
         int size = dolls.size();
         if(size != 0)

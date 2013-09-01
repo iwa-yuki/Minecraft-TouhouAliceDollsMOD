@@ -6,6 +6,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
+/**
+ * 持ち主を見る
+ */
 public class EntityDollAIWatchOwner extends EntityDollAIBase
 {
     private EntityPlayer owner;
@@ -20,7 +23,7 @@ public class EntityDollAIWatchOwner extends EntityDollAIBase
 
         this.range = 8.0F;
         this.probability = 0.02F;
-        this.setMutexBits(3);
+        this.setMutexBits(2);
     }
 
     @Override

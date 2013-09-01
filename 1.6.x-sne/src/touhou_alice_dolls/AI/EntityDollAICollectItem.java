@@ -44,6 +44,10 @@ public class EntityDollAICollectItem extends EntityDollAIBase
         {
             return false;
         }
+        if(theDoll.getFirstEmptyStack() == -1)
+        {
+            return false;
+        }
 
         // 蒐集対象探索
         List<EntityItem> itemList = (List<EntityItem>)(theWorld.getEntitiesWithinAABB(EntityItem.class, theDoll.boundingBox.expand(searchRange, searchHeight, searchRange)));
@@ -101,10 +105,6 @@ public class EntityDollAICollectItem extends EntityDollAIBase
         {
             return false;
         }
-        // if(this.pathfinder.noPath())
-        // {
-        //     return false;
-        // }
         if(this.theItem == null)
         {
             return false;
@@ -150,6 +150,7 @@ public class EntityDollAICollectItem extends EntityDollAIBase
                 if(theItem.getEntityItem().stackSize <= 0)
                 {
                     theItem.setDead();
+                    theItem = null;
                 }
             }
             else

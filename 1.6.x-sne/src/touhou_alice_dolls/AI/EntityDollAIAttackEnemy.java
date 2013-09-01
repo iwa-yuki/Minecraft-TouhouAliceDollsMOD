@@ -3,6 +3,8 @@ package mods.touhou_alice_dolls.AI;
 import net.minecraft.world.World;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,22 +15,25 @@ import net.minecraft.util.DamageSource;
 import java.util.*;
 import java.util.regex.*;
 
-public class EntityDollAIAttackTarget extends EntityDollAIBase
+public class EntityDollAIAttackEnemy extends EntityDollAIBase
 {
     private PathNavigate pathfinder;
     private EntityLivingBase theTarget;
     private float speed;
     private int counter;
     private boolean avoidsWater;
+    public static double searchRange;
+    public static double searchHeight;
     public static String targetEntityRegex;
     public static int attackStrength;
 
-    public EntityDollAIAttackTarget(EntityAliceDoll doll)
+    public EntityDollAIAttackEnemy(EntityAliceDoll doll)
     {
         super(doll);
         this.speed = 1.0F;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
+        counter = 0;
     }
 
     @Override
@@ -42,22 +47,76 @@ public class EntityDollAIAttackTarget extends EntityDollAIBase
         {
             return false;
         }
-        theTarget = theDoll.getAttackTarget();
-        if(theTarget == null)
+        if(--counter > 0)
         {
             return false;
         }
-
-        String name = EntityList.getEntityString(theTarget);
-        if(name == null)
-        {
-            return false;
-        }
-
+        counter = 20;
+        
+        //攻撃対象設定
         Pattern targetPattern = Pattern.compile(targetEntityRegex);
-        Matcher targetMatcher = targetPattern.matcher(name);
-
-        if(!targetMatcher.find())
+        Matcher targetMatcher;
+        List<EntityLivingBase> targetList =
+            (List<EntityLivingBase>)(theWorld.getEntitiesWithinAABB(EntityLivingBase.class, theDoll.boundingBox.expand(searchRange, searchHeight, searchRange)));
+        theTarget = null;
+        for(EntityLivingBase e : targetList)
+        {
+            String name = EntityList.getEntityString(e);
+            if(name == null || name == "")
+            {
+                name = "unknown";
+            }
+            
+            if(theDoll.isPatrolMode())
+            {
+                targetMatcher = targetPattern.matcher(name);
+                if(targetMatcher.find())
+                {
+                    if(theTarget == null)
+                    {
+                        theTarget = e;
+                    }
+                    else
+                    {
+                        if(theDoll.getDistanceSqToEntity(theTarget)
+                           > theDoll.getDistanceSqToEntity(e))
+                        {
+                            theTarget = e;
+                        }
+                    }
+                }
+            }
+        
+            if(theDoll.isFollowMode())
+            {
+                Entity tt = null;
+                if(e instanceof EntityCreature)
+                {
+                    tt = ((EntityCreature)e).getEntityToAttack();
+                }
+                else if(e instanceof EntityLiving)
+                {
+                    tt = ((EntityLiving)e).getAttackTarget();
+                }
+                if(theDoll.isOwner(tt))
+                {
+                    if(theTarget == null)
+                    {
+                        theTarget = e;
+                    }
+                    else
+                    {
+                        if(theDoll.getDistanceSqToEntity(theTarget)
+                           > theDoll.getDistanceSqToEntity(e))
+                        {
+                            theTarget = e;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(theTarget == null)
         {
             return false;
         }
@@ -105,6 +164,7 @@ public class EntityDollAIAttackTarget extends EntityDollAIBase
         this.theTarget = null;
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
+        counter = 0;
     }
 
     @Override
@@ -124,10 +184,7 @@ public class EntityDollAIAttackTarget extends EntityDollAIBase
             if(this.theDoll.getDistanceSqToEntity(this.theTarget) < 9f
                && this.theDoll.getEntitySenses().canSee(this.theTarget))
             {
-                if (this.theDoll.getHeldItem() != null)
-                {
-                    this.theDoll.swingItem();
-                }
+                this.theDoll.swingItem();
 
                 if(theDoll.getOwnerEntity() != null)
                 {

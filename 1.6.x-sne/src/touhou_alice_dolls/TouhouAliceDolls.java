@@ -77,32 +77,41 @@ public class TouhouAliceDolls
             this.itemAliceDollID = cfg.getItem(
                 "itemAliceDollID", 5001).getInt();
 
-            EntityDollAISearchAndReportTarget.searchRange =
-            EntityDollAISearchTarget.searchRange =
-                cfg.get("DollAISearchTarget", "searchRange", 16.0D).getDouble(16.0D);
-            EntityDollAISearchAndReportTarget.searchHeight =
-            EntityDollAISearchTarget.searchHeight =
-                cfg.get("DollAISearchTarget", "searchHeight", 4.0D).getDouble(4.0D);
-            EntityDollAISearchAndReportTarget.searchEntityRegex =
-                cfg.get("DollAISearchTarget", "searchEntityRegex", "\\A(?!AliceDoll).*").getString();
-            EntityDollAISearchAndReportTarget.targetEntityRegex =
-            EntityDollAISearchTarget.targetEntityRegex =
-                cfg.get("DollAISearchTarget", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch|THFairy").getString();
+            EntityDollAIReportEntity.searchRange =
+            EntityDollAIAttackEnemy.searchRange =
+            EntityDollAIStealItem.searchRange =
+            EntityDollAIAttackWithBullet.searchRange =
+                cfg.get("DollAISearchEntity", "searchRange", 16.0D).getDouble(16.0D);
+            EntityDollAIReportEntity.searchHeight =
+            EntityDollAIAttackEnemy.searchHeight =
+            EntityDollAIStealItem.searchHeight =
+            EntityDollAIAttackWithBullet.searchHeight =
+                cfg.get("DollAISearchEntity", "searchHeight", 8.0D).getDouble(4.0D);
+            EntityDollAIReportEntity.searchEntityRegex =
+                cfg.get("DollAIReportEntity", "searchEntityRegex", "\\A(?!AliceDoll).*").getString();
+            
+            EntityDollAIAttackEnemy.targetEntityRegex =
+                cfg.get("DollAIAttackEnemy", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|LavaSlime").getString();
 
-            EntityDollAIAttackTarget.targetEntityRegex =
-                cfg.get("DollAIAttackTarget", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch|THFairy").getString();
-            EntityDollAIAttackTarget.attackStrength =
-                cfg.get("DollAIAttackTarget", "attackStrength", 2).getInt();
-            EntityDollAIExplode.searchRange =
-                cfg.get("DollAIExplode", "searchRange", 16.0D).getDouble(16.0D);
-            EntityDollAIExplode.searchHeight =
-                cfg.get("DollAIExplode", "searchHeight", 4.0D).getDouble(4.0D);
-            EntityDollAIExplode.targetEntityRegex =
-                cfg.get("DollAIExplode", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch").getString();
-            EntityDollAIExplode.explodeStrength =
-                (float)(cfg.get("DollAIExplode", "explodeStrength", 3.0D).getDouble(3.0D));
-            EntityDollAIExplode.mobGriefing = 
-                cfg.get("DollAIExplode", "mobGriefing", true).getBoolean(true);
+            EntityDollAIAttackWithBullet.targetEntityRegex =
+                cfg.get("DollAIAttackWithBullet", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Silverfish|Blaze|Ghast|LavaSlime|Witch|THFairy").getString();
+
+            EntityDollAIAttackEnemy.attackStrength =
+                cfg.get("DollAIAttackEnemy", "attackStrength", 2).getInt();
+
+            EntityDollAIExplosion.searchRange =
+                cfg.get("DollAIExplosion", "searchRange", 16.0D).getDouble(16.0D);
+
+            EntityDollAIExplosion.searchHeight =
+                cfg.get("DollAIExplosion", "searchHeight", 4.0D).getDouble(4.0D);
+
+            EntityDollAIExplosion.targetEntityRegex =
+                cfg.get("DollAIExplosion", "targetEntityRegex", "Zombie|Skeleton|Creeper|Spider|Slime|Enderman|Silverfish|Blaze|LavaSlime|Witch").getString();
+
+            EntityDollAIExplosion.explodeStrength =
+                (float)(cfg.get("DollAIExplosion", "explodeStrength", 3.0D).getDouble(3.0D));
+            EntityDollAIExplosion.mobGriefing = 
+                cfg.get("DollAIExplosion", "mobGriefing", true).getBoolean(true);
 
             EntityDollAICollectItem.searchRange =
                 cfg.get("DollAICollectItem", "searchRange", 16.0D).getDouble(16.0D);
@@ -114,19 +123,20 @@ public class TouhouAliceDolls
             EntityDollAITorcher.lightThreshold =
                 cfg.get("DollAITorcher", "lightThreshold", 5).getInt();
 
-            EntityDollAISearchBlock.targetBlockRegex =
+            EntityDollAIReportBlock.targetBlockRegex =
+            EntityDollAIMineBlock.targetBlockRegex = 
                 cfg.get("DollAISearchBlock", "targetBlockRegex", "ore.+|netherquartz").getString();
-            EntityDollAISearchBlock.mineRange =
-                EntityDollAILevelingBlock.mineRange =
+
+            EntityDollAIReportBlock.mineRange =
+            EntityDollAIMineBlock.mineRange = 
+                EntityDollAIQuarry.mineRange =
                 cfg.get("DollAISearchBlock", "mineRange", 3).getInt();
 
-            EntityDollAIMineBlock.mineSpeed = 
-                cfg.get("DollAIMineBlock", "mineSpeed", 2.5D).getDouble(2.5D);
+            EntityDollAIQuarry.levelingBlockRegex =
+                cfg.get("DollAIQuarry", "levelingBlockRegex", "stone|grass|dirt|sand|gravel|sandstone").getString();
 
-            EntityDollAILevelingBlock.levelingBlockRegex =
-                cfg.get("DollAILevelingBlock", "levelingBlockRegex", "stone|grass|dirt|sand|gravel|sandstone").getString();
-
-            EntityDollAIMineBlock.mineSpeed = 
+            EntityDollAIMineBlock.mineSpeed =
+                EntityDollAIQuarry.mineSpeed =
                 cfg.get("DollAIMineBlock", "mineSpeed", 2.5D).getDouble(2.5D);
 
             EntityDollAICutTree.logBlockRegex =
@@ -162,7 +172,7 @@ public class TouhouAliceDolls
             EntityAliceDoll.class, "AliceDoll", this.entityAliceDollID);
         EntityRegistry.registerModEntity(
             EntityAliceDoll.class, "AliceDoll", this.entityAliceDollID,
-            this, 64, 1, true);
+            this, 128, 2, true);
 
         // レンダラの登録
         proxy.registerRenderers();

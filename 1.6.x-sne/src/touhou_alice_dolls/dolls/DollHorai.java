@@ -89,7 +89,7 @@ public class DollHorai extends DollBase
     {
         super.onInitializeAI(doll);
 
-        doll.addAI(7, new EntityDollAISearchBlock(doll));
-        doll.addAI(9, new EntityDollAIMineBlock(doll));
+        doll.addAI(1, new EntityDollAIReportBlock(doll));
+        doll.addAI(2, new EntityDollAIMineBlock(doll));
     }
 }

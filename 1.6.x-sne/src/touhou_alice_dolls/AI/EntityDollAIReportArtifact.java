@@ -14,7 +14,7 @@ import mods.touhou_alice_dolls.EntityAliceDoll;
 import java.util.*;
 import java.util.regex.*;
 
-public class EntityDollAISearchSpawner extends EntityDollAIBase
+public class EntityDollAIReportArtifact extends EntityDollAIBase
 {
     private int counter;
     private int chunkX;
@@ -22,7 +22,7 @@ public class EntityDollAISearchSpawner extends EntityDollAIBase
     private int baseY;
     private TreeMap<Integer, String> spawnerMap;
 
-    public EntityDollAISearchSpawner(EntityAliceDoll doll)
+    public EntityDollAIReportArtifact(EntityAliceDoll doll)
     {
         super(doll);
         this.setMutexBits(8);

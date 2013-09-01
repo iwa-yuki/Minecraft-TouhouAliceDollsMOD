@@ -7,6 +7,9 @@ import net.minecraft.util.MathHelper;
 
 import mods.touhou_alice_dolls.EntityAliceDoll;
 
+/**
+ * ランダムに歩き回る
+ */
 public class EntityDollAIWander extends EntityDollAIBase
 {
     private double xPosition;

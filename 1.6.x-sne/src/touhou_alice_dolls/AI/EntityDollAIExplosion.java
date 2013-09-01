@@ -16,7 +16,7 @@ import mods.touhou_alice_dolls.EntityAliceDoll;
 import java.util.*;
 import java.util.regex.*;
 
-public class EntityDollAIExplode extends EntityDollAIBase
+public class EntityDollAIExplosion extends EntityDollAIBase
 {
     private PathNavigate pathfinder;
     private EntityLiving theTarget;
@@ -30,7 +30,7 @@ public class EntityDollAIExplode extends EntityDollAIBase
     public static float explodeStrength;
     public static boolean mobGriefing;
     
-    public EntityDollAIExplode(EntityAliceDoll doll)
+    public EntityDollAIExplosion(EntityAliceDoll doll)
     {
         super(doll);
         this.speed = 1.0F;
