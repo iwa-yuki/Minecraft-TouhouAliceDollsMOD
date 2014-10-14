@@ -27,7 +27,7 @@ public class ItemDollCore extends Item
         setMaxStackSize(16);
         setCreativeTab(CreativeTabs.tabTools);
         setUnlocalizedName("dollcore");
-        setTextureName("dollcore");
+        setTextureName("touhou_alice_common:dollcore");
     }
 
 	@Override

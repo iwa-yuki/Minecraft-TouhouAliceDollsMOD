@@ -41,7 +41,7 @@ public class ItemAliceDoll extends Item
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         setUnlocalizedName("alicedoll");
-        setTextureName("alicedoll");
+        setTextureName("touhou_alice_common:alicedoll");
     }
 
     @Override

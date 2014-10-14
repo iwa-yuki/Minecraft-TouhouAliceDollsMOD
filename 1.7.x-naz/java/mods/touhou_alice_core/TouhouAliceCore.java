@@ -133,12 +133,14 @@ public class TouhouAliceCore
     private void registerItems()
     {
         // ドールコア
-        this.itemDollCore = new ItemDollCore();
-    	GameData.getItemRegistry().addObject(itemDollCoreID, "dollcore", this.itemDollCore);
+        TouhouAliceCore.itemDollCore = new ItemDollCore();
+        GameRegistry.registerItem(TouhouAliceCore.itemDollCore, "dollcore", TouhouAliceCore.MODID);
+    	//GameData.getItemRegistry().addObject(itemDollCoreID, "dollcore", this.itemDollCore);
 
         // 人形
-        this.itemAliceDoll = new ItemAliceDoll();
-        GameData.getItemRegistry().addObject(itemAliceDollID, "alicedoll", this.itemAliceDoll);
+        TouhouAliceCore.itemAliceDoll = new ItemAliceDoll();
+        GameRegistry.registerItem(TouhouAliceCore.itemAliceDoll, "alicedoll", TouhouAliceCore.MODID);
+        //GameData.getItemRegistry().addObject(itemAliceDollID, "alicedoll", this.itemAliceDoll);
     }
     
     /**
@@ -186,12 +188,12 @@ public class TouhouAliceCore
     /**
      * ドールコアアイテム
      */
-    public Item itemDollCore;
+    public static Item itemDollCore;
 
     /**
      * 人形アイテム
      */
-    public Item itemAliceDoll;
+    public static Item itemAliceDoll;
 
     /**
      * チャンクローダー

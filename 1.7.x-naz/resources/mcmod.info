@@ -9,7 +9,7 @@
   "updateUrl": "",
   "authors": ["iwa_yukinoshita"],
   "credits": "",
-  "logoFile": "/assets/minecraft/textures/logo_s.png",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
   "screenshots": [],
   "dependencies": []
 },
@@ -23,7 +23,7 @@
   "updateUrl": "",
   "authors": ["iwa_yukinoshita"],
   "credits": "",
-  "logoFile": "/assets/minecraft/textures/logo_s.png",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
   "screenshots": [],
   "dependencies": []
 },
@@ -37,7 +37,7 @@
   "updateUrl": "",
   "authors": ["iwa_yukinoshita"],
   "credits": "",
-  "logoFile": "/assets/minecraft/textures/logo_s.png",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
   "screenshots": [],
   "dependencies": []
 }
