@@ -108,7 +108,7 @@ public class RenderAliceDoll extends RenderBiped
 
         if(rl == null)
         {
-            rl = new ResourceLocation(path);
+            rl = new ResourceLocation("touhou_alice_common", path);
             resourceMap.put(path, rl);
             FMLLog.info("Loaded texture \"%s\".", path);
         }
