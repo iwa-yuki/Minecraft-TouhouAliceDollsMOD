@@ -38,10 +38,6 @@ import mods.touhou_alice_core.chunkloader.*;
     name = TouhouAliceCore.MODNAME,
     version = TouhouAliceCore.VERSION
     )
-//@NetworkMod(
-//    clientSideRequired = true,
-//    serverSideRequired = false
-//    )
 public class TouhouAliceCore
 {
 	/** MODの識別子 */
@@ -81,10 +77,6 @@ public class TouhouAliceCore
 
             this.entityAliceDollID = cfg.get(
                 "entity", "EntityAliceDollID", 68).getInt();
-            this.itemDollCoreID = cfg.get(
-                "item", "itemDollCoreID", 5000).getInt();
-            this.itemAliceDollID = cfg.get(
-                "item", "itemAliceDollID", 5001).getInt();
         }
         catch (Exception e)
         {
@@ -140,12 +132,10 @@ public class TouhouAliceCore
         // ドールコア
         TouhouAliceCore.itemDollCore = new ItemDollCore();
         GameRegistry.registerItem(TouhouAliceCore.itemDollCore, "dollcore", TouhouAliceCore.MODID);
-    	//GameData.getItemRegistry().addObject(itemDollCoreID, "dollcore", this.itemDollCore);
 
         // 人形
         TouhouAliceCore.itemAliceDoll = new ItemAliceDoll();
         GameRegistry.registerItem(TouhouAliceCore.itemAliceDoll, "alicedoll", TouhouAliceCore.MODID);
-        //GameData.getItemRegistry().addObject(itemAliceDollID, "alicedoll", this.itemAliceDoll);
     }
     
     /**
@@ -179,16 +169,6 @@ public class TouhouAliceCore
      * 人形のエンティティID
      */
     private int entityAliceDollID;
-
-    /**
-     * ドールコアのアイテムID
-     */
-    private int itemDollCoreID;
-
-    /**
-     * 人形のアイテムID
-     */
-    private int itemAliceDollID;
 
     /**
      * ドールコアアイテム
