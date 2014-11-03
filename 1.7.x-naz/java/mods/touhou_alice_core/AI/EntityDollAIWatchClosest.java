@@ -51,6 +51,8 @@ public class EntityDollAIWatchClosest extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         this.lookTime = 40 + this.theDoll.getRNG().nextInt(40);
     }
 
@@ -58,6 +60,8 @@ public class EntityDollAIWatchClosest extends EntityDollAIBase
     public void resetTask()
     {
         this.closestEntity = null;
+        
+        super.resetTask();
     }
 
     @Override

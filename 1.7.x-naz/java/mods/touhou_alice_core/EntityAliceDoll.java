@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Iterator;
 
 import mods.touhou_alice_core.dolls.*;
+import mods.touhou_alice_core.gui.GuiAliceDollInventory;
 import mods.touhou_alice_core.AI.*;
 import mods.touhou_alice_core.chunkloader.*;
 
@@ -324,7 +325,8 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                 else if(itemstack.getItem() == Item.getItemFromBlock(Blocks.chest))
                 {
                     // チェストで右クリックされたらインベントリを開く
-                    par1EntityPlayer.displayGUIChest(this);
+                    //par1EntityPlayer.displayGUIChest(this);
+                	par1EntityPlayer.openGui(TouhouAliceCore.instance, GuiAliceDollInventory.GuiID, this.worldObj, this.getEntityId(), 0, 0);
                     return true;
                 }
                 else
@@ -1335,10 +1337,10 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         
         if(entityplayer != null && getChatLevel()>=level)
 		{
-			if(entityplayer != null && getChatLevel()==3)
-			{
-				System.out.println("  "+msg);
-			}
+//			if(entityplayer != null && getChatLevel()==3)
+//			{
+//				System.out.println("  "+msg);
+//			}
 			if(!lastMsg.equalsIgnoreCase(msg))
 			{
 				entityplayer.addChatComponentMessage(new ChatComponentText(msg));

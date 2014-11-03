@@ -67,7 +67,7 @@ public class EntityDollAIAttackEnemy extends EntityDollAIBase
             String name = EntityList.getEntityString(e);
             if(name == null || name == "")
             {
-                name = "unknown";
+                continue;
             }
             
             if(theDoll.isPatrolMode())
@@ -130,6 +130,8 @@ public class EntityDollAIAttackEnemy extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
         targetLost = 0;
         this.avoidsWater = this.theDoll.getNavigator().getAvoidsWater();
@@ -173,6 +175,8 @@ public class EntityDollAIAttackEnemy extends EntityDollAIBase
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
         counter = 0;
+        
+        super.resetTask();
     }
 
     @Override

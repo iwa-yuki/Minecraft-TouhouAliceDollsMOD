@@ -173,6 +173,8 @@ public class EntityDollAICutTree extends EntityDollAIBase
     
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
     }
     
@@ -203,6 +205,8 @@ public class EntityDollAICutTree extends EntityDollAIBase
     public void resetTask()
     {
         targetLockon = false;
+        
+        super.resetTask();
     }
 
     @Override

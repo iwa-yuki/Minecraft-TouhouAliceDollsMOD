@@ -34,17 +34,14 @@ public class EntityDollAIReportBlock extends EntityDollAIBase
 
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
     }
     
     public boolean continueExecuting()
     {
         return theDoll.isEnable();
-    }
-    
-    @Override
-    public void resetTask()
-    {
     }
 
     public void updateTask()

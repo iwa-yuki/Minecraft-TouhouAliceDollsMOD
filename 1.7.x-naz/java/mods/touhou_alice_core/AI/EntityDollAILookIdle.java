@@ -20,24 +20,30 @@ public class EntityDollAILookIdle extends EntityDollAIBase
         this.setMutexBits(2);
     }
 
+    @Override
     public boolean shouldExecute()
     {
         return this.theDoll.getRNG().nextFloat() < 0.02F;
     }
 
+    @Override
     public boolean continueExecuting()
     {
         return this.idleTime >= 0;
     }
 
+    @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         double var1 = (Math.PI * 2D) * this.theDoll.getRNG().nextDouble();
         this.lookX = Math.cos(var1);
         this.lookZ = Math.sin(var1);
         this.idleTime = 20 + this.theDoll.getRNG().nextInt(20);
     }
 
+    @Override
     public void updateTask()
     {
         --this.idleTime;

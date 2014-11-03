@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -25,6 +26,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import mods.touhou_alice_core.dolls.*;
+import mods.touhou_alice_core.gui.GuiHandler;
 import mods.touhou_alice_core.AI.*;
 import mods.touhou_alice_core.chunkloader.*;
 
@@ -36,10 +38,6 @@ import mods.touhou_alice_core.chunkloader.*;
     name = TouhouAliceCore.MODNAME,
     version = TouhouAliceCore.VERSION
     )
-//@NetworkMod(
-//    clientSideRequired = true,
-//    serverSideRequired = false
-//    )
 public class TouhouAliceCore
 {
 	/** MODの識別子 */
@@ -79,10 +77,6 @@ public class TouhouAliceCore
 
             this.entityAliceDollID = cfg.get(
                 "entity", "EntityAliceDollID", 68).getInt();
-            this.itemDollCoreID = cfg.get(
-                "item", "itemDollCoreID", 5000).getInt();
-            this.itemAliceDollID = cfg.get(
-                "item", "itemAliceDollID", 5001).getInt();
         }
         catch (Exception e)
         {
@@ -117,6 +111,9 @@ public class TouhouAliceCore
 
         // レシピの登録
         registerRecipes();
+        
+        // GuiHandlerの登録
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
         // チャンクローダーの初期化
         chunkloader = new DollChunkLoader(this);
@@ -135,12 +132,10 @@ public class TouhouAliceCore
         // ドールコア
         TouhouAliceCore.itemDollCore = new ItemDollCore();
         GameRegistry.registerItem(TouhouAliceCore.itemDollCore, "dollcore", TouhouAliceCore.MODID);
-    	//GameData.getItemRegistry().addObject(itemDollCoreID, "dollcore", this.itemDollCore);
 
         // 人形
         TouhouAliceCore.itemAliceDoll = new ItemAliceDoll();
         GameRegistry.registerItem(TouhouAliceCore.itemAliceDoll, "alicedoll", TouhouAliceCore.MODID);
-        //GameData.getItemRegistry().addObject(itemAliceDollID, "alicedoll", this.itemAliceDoll);
     }
     
     /**
@@ -174,16 +169,6 @@ public class TouhouAliceCore
      * 人形のエンティティID
      */
     private int entityAliceDollID;
-
-    /**
-     * ドールコアのアイテムID
-     */
-    private int itemDollCoreID;
-
-    /**
-     * 人形のアイテムID
-     */
-    private int itemAliceDollID;
 
     /**
      * ドールコアアイテム

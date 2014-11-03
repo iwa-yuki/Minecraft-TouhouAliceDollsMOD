@@ -32,6 +32,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
     private PathNavigate pathfinder;
     private float speed;
     private int counter;
+    private int targetLost;
     private boolean avoidsWater;
     private EntityLivingBase theTarget;
     
@@ -176,7 +177,10 @@ public class EntityDollAIStealItem extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
+        targetLost = 0;
         this.avoidsWater = this.theDoll.getNavigator().getAvoidsWater();
         this.theDoll.getNavigator().setAvoidsWater(false);
     }
@@ -204,6 +208,10 @@ public class EntityDollAIStealItem extends EntityDollAIBase
         {
             return false;
         }
+        if(targetLost >= 60)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -212,15 +220,26 @@ public class EntityDollAIStealItem extends EntityDollAIBase
     {
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
+        
+        super.resetTask();
     }
 
     @Override
     public void updateTask()
     {
-        if(!this.pathfinder.noPath())
+        if(!this.theTarget.isEntityAlive())
+        {
+            return;
+        }
+        if(this.theDoll.getEntitySenses().canSee(this.theTarget))
         {
             this.theDoll.getLookHelper().setLookPositionWithEntity(
                 this.theTarget, 10.0F, (float)this.theDoll.getVerticalFaceSpeed());
+            targetLost = targetLost > 0 ? (targetLost - 1) : 0;
+        }
+        else
+        {
+            targetLost++;
         }
 
         if (--this.counter <= 0)

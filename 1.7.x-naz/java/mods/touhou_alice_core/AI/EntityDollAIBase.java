@@ -15,8 +15,23 @@ public class EntityDollAIBase extends EntityAIBase
         theWorld = doll.worldObj;
     }
     
+    @Override
     public boolean shouldExecute()
     {
         return false;
+    }
+
+	@Override
+	public void startExecuting() {
+		theDoll.chatMessage(theDoll.getDollName()+" : "+getAIName()+".start", 3);
+	}
+
+	@Override
+	public void resetTask() {
+		theDoll.chatMessage(theDoll.getDollName()+" : "+getAIName()+".reset", 3);
+	}
+    
+    public String getAIName() {
+    	return this.getClass().getSimpleName();
     }
 }
