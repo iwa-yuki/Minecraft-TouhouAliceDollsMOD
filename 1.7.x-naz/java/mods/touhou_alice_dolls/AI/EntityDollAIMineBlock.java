@@ -216,6 +216,8 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         Block b = theWorld.getBlock(mineX, mineY, mineZ);
         if(b == null)
         {
@@ -237,6 +239,8 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
     public void resetTask()
     {
         this.pathfinder.clearPathEntity();
+        
+        super.resetTask();
     }
 
     @Override

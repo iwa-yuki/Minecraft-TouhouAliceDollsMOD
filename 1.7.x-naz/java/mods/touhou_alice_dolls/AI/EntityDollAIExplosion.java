@@ -112,6 +112,8 @@ public class EntityDollAIExplosion extends EntityDollAIBase
 
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
         fuse = 0;
         this.avoidsWater = this.theDoll.getNavigator().getAvoidsWater();
@@ -149,6 +151,8 @@ public class EntityDollAIExplosion extends EntityDollAIBase
         this.theTarget = null;
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
+        
+        super.resetTask();
     }
 
     @Override

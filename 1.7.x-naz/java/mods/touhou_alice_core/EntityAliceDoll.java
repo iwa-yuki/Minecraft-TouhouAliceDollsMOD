@@ -1337,10 +1337,10 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         
         if(entityplayer != null && getChatLevel()>=level)
 		{
-			if(entityplayer != null && getChatLevel()==3)
-			{
-				System.out.println("  "+msg);
-			}
+//			if(entityplayer != null && getChatLevel()==3)
+//			{
+//				System.out.println("  "+msg);
+//			}
 			if(!lastMsg.equalsIgnoreCase(msg))
 			{
 				entityplayer.addChatComponentMessage(new ChatComponentText(msg));

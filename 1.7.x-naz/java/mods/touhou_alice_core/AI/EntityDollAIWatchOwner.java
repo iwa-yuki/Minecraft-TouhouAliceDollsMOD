@@ -67,6 +67,8 @@ public class EntityDollAIWatchOwner extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         this.lookTime = 40 + this.theDoll.getRNG().nextInt(40);
     }
 
@@ -74,6 +76,8 @@ public class EntityDollAIWatchOwner extends EntityDollAIBase
     public void resetTask()
     {
         owner = null;
+        
+        super.resetTask();
     }
 
     @Override

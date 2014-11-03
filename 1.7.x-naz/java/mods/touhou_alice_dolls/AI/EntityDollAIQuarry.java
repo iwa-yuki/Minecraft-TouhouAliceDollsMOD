@@ -175,6 +175,8 @@ public class EntityDollAIQuarry extends EntityDollAIBase
 
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
         isMining = false;
     }
@@ -217,6 +219,8 @@ public class EntityDollAIQuarry extends EntityDollAIBase
     {
         counter = 0;
         this.pathfinder.clearPathEntity();
+        
+        super.resetTask();
     }
 
     public void updateTask()

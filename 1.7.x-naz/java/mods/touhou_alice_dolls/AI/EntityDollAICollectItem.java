@@ -90,6 +90,8 @@ public class EntityDollAICollectItem extends EntityDollAIBase
     @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
         catchCounter = 0;
         this.avoidsWater = this.theDoll.getNavigator().getAvoidsWater();
@@ -124,6 +126,8 @@ public class EntityDollAICollectItem extends EntityDollAIBase
         this.theItem = null;
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
+        
+        super.resetTask();
     }
 
     @Override

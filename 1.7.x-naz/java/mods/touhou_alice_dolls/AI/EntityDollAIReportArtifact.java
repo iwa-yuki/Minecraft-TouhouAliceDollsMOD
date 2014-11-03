@@ -42,6 +42,8 @@ public class EntityDollAIReportArtifact extends EntityDollAIBase
 
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
     }
     

@@ -24,6 +24,7 @@ public class EntityDollAIWander extends EntityDollAIBase
         this.setMutexBits(1);
     }
 
+    @Override
     public boolean shouldExecute()
     {
         if (this.theDoll.getRNG().nextInt(100) != 0)
@@ -33,6 +34,10 @@ public class EntityDollAIWander extends EntityDollAIBase
         if(!this.theDoll.isPatrolMode())
         {
             return false;
+        }
+        if(this.theDoll.isGUIOpened())
+        {
+        	return false;
         }
 
         int par1 = 10;
@@ -50,6 +55,7 @@ public class EntityDollAIWander extends EntityDollAIBase
 
     }
 
+    @Override
     public boolean continueExecuting()
     {
         if(this.theDoll.getNavigator().noPath())
@@ -60,11 +66,18 @@ public class EntityDollAIWander extends EntityDollAIBase
         {
             return false;
         }
+        if(this.theDoll.isGUIOpened())
+        {
+        	return false;
+        }
         return true;
     }
 
+    @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         this.theDoll.getNavigator().tryMoveToXYZ(
             this.xPosition, this.yPosition, this.zPosition, this.speed);
     }
@@ -73,5 +86,7 @@ public class EntityDollAIWander extends EntityDollAIBase
     public void resetTask()
     {
         this.theDoll.getNavigator().clearPathEntity();
+        
+        super.resetTask();
     }
 }

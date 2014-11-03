@@ -40,6 +40,8 @@ public class EntityDollAIReportEntity extends EntityDollAIBase
 
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         counter = 0;
     }
     
@@ -61,7 +63,7 @@ public class EntityDollAIReportEntity extends EntityDollAIBase
             for(EntityLivingBase e : targetList)
             {
                 String name = EntityList.getEntityString(e);
-                if(name == null)
+                if(name == null || name == "")
                 {
                     continue;
                 }
@@ -80,56 +82,6 @@ public class EntityDollAIReportEntity extends EntityDollAIBase
                         entityCount.put(name, new Integer(1));
                     }
                 }
-
-            //     //攻撃対象設定
-            //     if(theDoll.isPatrolMode())
-            //     {
-            //         targetMatcher = targetPattern.matcher(name);
-            //         if(targetMatcher.find())
-            //         {
-            //             if(theTarget == null)
-            //             {
-            //                 theTarget = e;
-            //             }
-            //             else
-            //             {
-            //                 if(theDoll.getDistanceSqToEntity(theTarget)
-            //                    > theDoll.getDistanceSqToEntity(e))
-            //                 {
-            //                     theTarget = e;
-            //                 }
-            //             }
-            //         }
-            //     }
-
-            //     if(theDoll.isFollowMode())
-            //     {
-            //         Entity tt = null;
-            //         if(e instanceof EntityCreature)
-            //         {
-            //             tt = ((EntityCreature)e).getEntityToAttack();
-            //         }
-            //         else if(e instanceof EntityLiving)
-            //         {
-            //             tt = ((EntityLiving)e).getAttackTarget();
-            //         }
-            //         if(theDoll.isOwner(tt))
-            //         {
-            //             if(theTarget == null)
-            //             {
-            //                 theTarget = e;
-            //             }
-            //             else
-            //             {
-            //                 if(theDoll.getDistanceSqToEntity(theTarget)
-            //                    > theDoll.getDistanceSqToEntity(e))
-            //                 {
-            //                     theTarget = e;
-            //                 }
-            //             }
-            //         }
-            //     }
-
             }
 
             // 出力文字列の作成

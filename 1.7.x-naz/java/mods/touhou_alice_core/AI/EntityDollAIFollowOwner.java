@@ -31,6 +31,7 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
         this.setMutexBits(3);
     }
 
+    @Override
     public boolean shouldExecute()
     {
         EntityPlayer owner = this.theDoll.getOwnerEntity();
@@ -43,6 +44,10 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
         {
             return false;
         }
+        if(this.theDoll.isGUIOpened())
+        {
+        	return false;
+        }
         if (this.theDoll.getDistanceSqToEntity(owner) < (double)(this.minDist * this.minDist))
         {
             return false;
@@ -52,6 +57,7 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
         return true;
     }
 
+    @Override
     public boolean continueExecuting()
     {
         if(this.pathfinder.noPath())
@@ -66,23 +72,34 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
         {
             return false;
         }
+        if(this.theDoll.isGUIOpened())
+        {
+        	return false;
+        }
         return true;
     }
 
+    @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         this.counter = 0;
         this.avoidsWater = this.theDoll.getNavigator().getAvoidsWater();
         this.theDoll.getNavigator().setAvoidsWater(false);
     }
 
+    @Override
     public void resetTask()
     {
         this.theOwner = null;
         this.pathfinder.clearPathEntity();
         this.theDoll.getNavigator().setAvoidsWater(this.avoidsWater);
+        
+        super.resetTask();
     }
 
+    @Override
     public void updateTask()
     {
         this.theDoll.getLookHelper().setLookPositionWithEntity(

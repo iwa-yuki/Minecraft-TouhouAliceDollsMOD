@@ -17,6 +17,7 @@ public class EntityDollAISwimming extends EntityDollAIBase
         doll.getNavigator().setCanSwim(true);
     }
 
+    @Override
     public boolean shouldExecute()
     {
         if(theDoll.isRideonMode())
@@ -30,14 +31,18 @@ public class EntityDollAISwimming extends EntityDollAIBase
         return false;
     }
 
+    @Override
     public void startExecuting()
     {
+    	super.startExecuting();
+    	
         if(theDoll.isStandbyMode())
         {
             theDoll.setPatrolMode();
         }
     }
 
+    @Override
     public void updateTask()
     {
         if (this.theDoll.getRNG().nextFloat() < 0.8F)
