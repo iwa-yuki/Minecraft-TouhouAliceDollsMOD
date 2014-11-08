@@ -111,6 +111,7 @@ public class TouhouAliceExtras
         DollRegistry.addDoll(12, new DollYuuka());
         DollRegistry.addDoll(13, new DollReimu());
         DollRegistry.addDoll(14, new DollWakasagi());
+        DollRegistry.addDoll(15, new DollAya());
         DollRegistry.addDoll(31, new DollGoliath());
     }
 
