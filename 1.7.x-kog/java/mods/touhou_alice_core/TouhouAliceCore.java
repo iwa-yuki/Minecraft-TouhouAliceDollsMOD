@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import mods.touhou_alice_core.dolls.*;
 import mods.touhou_alice_core.gui.GuiHandler;
+import mods.touhou_alice_core.packet.PacketHandler;
 import mods.touhou_alice_core.AI.*;
 import mods.touhou_alice_core.chunkloader.*;
 
@@ -95,6 +96,9 @@ public class TouhouAliceCore
         
         // アイテムの登録
         registerItems();
+        
+        // パケットハンドラの初期化
+        PacketHandler.init();
     }
 
     /**

@@ -182,6 +182,8 @@ public class DollAya extends DollBase
     public void onInitializeAI(EntityAliceDoll doll)
     {
         super.onInitializeAI(doll);
+        
+        doll.addAI(1, new EntityDollAIAyaShot(doll));
     }
     @SideOnly(Side.CLIENT)
     /**

@@ -203,7 +203,7 @@ public class RenderAliceDoll extends RenderBiped
             else if(renderType == EnumDollRenderType.TALL)
             {
                 GL11.glTranslatef(-0.0625F, 0.25F, 0F);
-                GL11.glScalef(0.75F, 0.75F, 0.75F);
+                GL11.glScalef(0.6F, 0.6F, 0.6F);
             }
             else if(renderType == EnumDollRenderType.GRANDE)
             {
