@@ -407,7 +407,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     @Override
 	public float getEyeHeight()
 	{
-        return this.height;
+        return this.height * 0.9F;
 	}
     
     /** ライドオン時の位置調整 */

@@ -16,31 +16,52 @@ import mods.touhou_alice_core.packet.PacketHandler;
 
 public class EntityDollAIAyaShot  extends EntityDollAIBase{
     
+	public static int shotInterval;
+	public static boolean emergencyShot;
+	
 	private int counter;
-	private int interval;
+	private float prevHealth;
 	
 	public EntityDollAIAyaShot(EntityAliceDoll doll) {
 		super(doll);
 		
 		counter = 0;
-		interval = 20*30;
 		
 		setMutexBits(0);
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		return theDoll.isEnable();
+		return theDoll.isEntityAlive() && theDoll.isEnable() && (shotInterval > 0);
+	}
+
+	@Override
+	public void startExecuting() {
+		super.startExecuting();
+		
+		prevHealth = theDoll.getHealth();
 	}
 
 	@Override
 	public void updateTask() {
+		
+		if(emergencyShot && (prevHealth > theDoll.getHealth())) {
+			sendMessageAyaShot();
+			counter = 0;
+		}
+		prevHealth = theDoll.getHealth();
 
-		if(counter < interval) {
+		if(counter < shotInterval * 20) {
 			counter++;
 			return;
 		}
+		sendMessageAyaShot();
 		
+		counter = 0;
+	}
+
+	private void sendMessageAyaShot() {
+
 		if(!theWorld.isRemote) {
 			EntityPlayer player = theDoll.getOwnerEntity();
 			if(player != null && player instanceof EntityPlayerMP) {
@@ -48,8 +69,5 @@ public class EntityDollAIAyaShot  extends EntityDollAIBase{
 				PacketHandler.INSTANCE.sendTo(new MessageAyaShot(theDoll), playerMP);
 			}
 		}
-		
-		counter = 0;
 	}
-
 }

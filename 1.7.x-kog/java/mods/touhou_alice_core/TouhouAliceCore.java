@@ -3,6 +3,8 @@
 
 package mods.touhou_alice_core;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 //import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -10,6 +12,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -23,7 +26,11 @@ import java.util.logging.Level;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import mods.touhou_alice_core.dolls.*;
 import mods.touhou_alice_core.gui.GuiHandler;
@@ -99,6 +106,20 @@ public class TouhouAliceCore
         
         // パケットハンドラの初期化
         PacketHandler.init();
+    }
+    
+    @EventHandler
+    public void load(FMLInitializationEvent event) {
+    	MinecraftForge.EVENT_BUS.register(this);
+    }
+    
+    @SubscribeEvent
+    public void renderFirstPersonHand(RenderHandEvent event) {
+    	Minecraft mc = Minecraft.getMinecraft();
+    	if(mc.renderViewEntity instanceof EntityAliceDoll)
+    	{
+    		event.setCanceled(true);
+    	}
     }
 
     /**

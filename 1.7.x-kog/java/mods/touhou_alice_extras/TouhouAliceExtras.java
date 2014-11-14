@@ -96,6 +96,12 @@ public class TouhouAliceExtras
 
             EntityDollAIFarmer.farmRange = 
                 cfg.get("DollAIFarmer", "farmRange", 5).getInt();
+
+            EntityDollAIAyaShot.shotInterval = 
+                cfg.get("DollAIAyaShot", "shotInterval", 30).getInt();
+            
+            EntityDollAIAyaShot.emergencyShot = 
+                    cfg.get("DollAIAyaShot", "emergencyShot", true).getBoolean(true);
          }
         catch (Exception e)
         {
