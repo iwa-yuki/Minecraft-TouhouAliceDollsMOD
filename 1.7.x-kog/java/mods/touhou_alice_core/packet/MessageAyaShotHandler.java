@@ -78,9 +78,11 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
 	 * スクリーンショット生成のためのレンダリング
 	 */
 	private void renderScreenShot(Minecraft mc, EntityAliceDoll doll) {
-
+		
+		// 人形をカメラマンに設定
 	    mc.renderViewEntity = doll;
 
+	    // 撮影用にパラメータを変更
 	    double posY = mc.renderViewEntity.posY;
         mc.renderViewEntity.posY -= (1.62D - mc.renderViewEntity.getEyeHeight());
         float rotationYaw = mc.renderViewEntity.rotationYaw;
@@ -89,7 +91,35 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
         int thirdPersonView = mc.gameSettings.thirdPersonView;
         mc.gameSettings.thirdPersonView = 0;
         
-//        mc.entityRenderer.updateCameraAndRender(1F);
+        PotionEffect dollNightVisionEffect = null;
+        PotionEffect dollBlindnessEffect = null;
+        PotionEffect playerNightVisionEffect = null;
+        PotionEffect playerBlindnessEffect = null;
+        
+        if(doll.isPotionActive(Potion.nightVision))
+        {
+        	dollNightVisionEffect = doll.getActivePotionEffect(Potion.nightVision);
+        	doll.removePotionEffect(Potion.nightVision.getId());
+        }
+        if(mc.thePlayer.isPotionActive(Potion.nightVision))
+        {
+        	playerNightVisionEffect = mc.thePlayer.getActivePotionEffect(Potion.nightVision);
+        	doll.addPotionEffect(playerNightVisionEffect);
+        }
+
+        if(doll.isPotionActive(Potion.blindness))
+        {
+        	dollBlindnessEffect = doll.getActivePotionEffect(Potion.blindness);
+        	doll.removePotionEffect(Potion.blindness.getId());
+        }
+        if(mc.thePlayer.isPotionActive(Potion.blindness))
+        {
+        	playerBlindnessEffect = mc.thePlayer.getActivePotionEffect(Potion.blindness);
+        	doll.addPotionEffect(playerBlindnessEffect);
+        }
+        
+        // レンダー実行
+        //   mc.entityRenderer.updateCameraAndRender(1F)から不要な処理を除いたもの
         if (!mc.skipRenderWorld)
         {
             if (mc.theWorld != null)
@@ -119,6 +149,21 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
                 GL11.glLoadIdentity();
                 mc.entityRenderer.setupOverlayRendering();
             }
+        }
+        
+        // パラメータを元の状態に戻す
+        if(playerBlindnessEffect != null) {
+        	doll.removePotionEffect(Potion.blindness.getId());
+        }
+        if(dollBlindnessEffect != null) {
+        	doll.addPotionEffect(dollBlindnessEffect);
+        }
+        
+        if(playerNightVisionEffect != null) {
+        	doll.removePotionEffect(Potion.nightVision.getId());
+        }
+        if(dollNightVisionEffect != null) {
+        	doll.addPotionEffect(dollNightVisionEffect);
         }
         
         mc.gameSettings.thirdPersonView = thirdPersonView;
