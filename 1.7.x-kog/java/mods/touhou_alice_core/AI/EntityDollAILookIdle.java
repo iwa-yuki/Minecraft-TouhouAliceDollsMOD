@@ -11,6 +11,7 @@ import mods.touhou_alice_core.EntityAliceDoll;
 public class EntityDollAILookIdle extends EntityDollAIBase
 {
     private double lookX;
+    private double lookY;
     private double lookZ;
     private int idleTime = 0;
 
@@ -38,7 +39,9 @@ public class EntityDollAILookIdle extends EntityDollAIBase
     	super.startExecuting();
     	
         double var1 = (Math.PI * 2D) * this.theDoll.getRNG().nextDouble();
+        double var2 = (Math.PI / 6D) * (2D * this.theDoll.getRNG().nextDouble() - 1D);
         this.lookX = Math.cos(var1);
+        this.lookY = Math.sin(var2);
         this.lookZ = Math.sin(var1);
         this.idleTime = 20 + this.theDoll.getRNG().nextInt(20);
     }
@@ -49,7 +52,7 @@ public class EntityDollAILookIdle extends EntityDollAIBase
         --this.idleTime;
         this.theDoll.getLookHelper().setLookPosition(
             this.theDoll.posX + this.lookX,
-            this.theDoll.posY + (double)this.theDoll.getEyeHeight(),
+            this.theDoll.posY + (double)this.theDoll.getEyeHeight() + this.lookY,
             this.theDoll.posZ + this.lookZ,
             10.0F, (float)this.theDoll.getVerticalFaceSpeed());
     }
