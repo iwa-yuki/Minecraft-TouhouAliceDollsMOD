@@ -374,6 +374,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         return true;
     }
     
+    
     ////////////////////////////////////////////////////////////////////////////
     // 設定
 
@@ -1313,6 +1314,26 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 
             this.worldObj.spawnEntityInWorld(entityitem);
         }
+    }
+    
+    /**
+     * アイテムを回収できるかどうか
+     * @param itemstack
+     * @return
+     */
+    public boolean canPickupItem(ItemStack itemstack)
+    {
+    	// 空きスロットがあれば回収可能
+    	if(getFirstEmptyStack() >= 0)
+    	{
+    		return true;
+    	}
+    	// 空きスロットがない場合、スタック可能であれば回収可能
+    	if(storeItemStack(itemstack) >= 0)
+    	{
+    		return true;
+    	}
+    	return false;
     }
 
 

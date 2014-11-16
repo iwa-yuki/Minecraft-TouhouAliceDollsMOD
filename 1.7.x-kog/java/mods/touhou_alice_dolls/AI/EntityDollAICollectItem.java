@@ -46,10 +46,6 @@ public class EntityDollAICollectItem extends EntityDollAIBase
         {
             return false;
         }
-        if(theDoll.getFirstEmptyStack() == -1)
-        {
-            return false;
-        }
 
         // 蒐集対象探索
         List<EntityItem> itemList = (List<EntityItem>)(theWorld.getEntitiesWithinAABB(EntityItem.class, theDoll.boundingBox.expand(searchRange, searchHeight, searchRange)));
@@ -57,6 +53,10 @@ public class EntityDollAICollectItem extends EntityDollAIBase
         theItem = null;
         for(EntityItem e : itemList)
         {
+        	if(!theDoll.canPickupItem(e.getEntityItem()))
+        	{
+        		continue;
+        	}
             if(theItem == null)
             {
                 theItem = e;
