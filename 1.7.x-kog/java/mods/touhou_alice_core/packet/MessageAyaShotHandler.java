@@ -61,6 +61,10 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
 				doll.chatMessage(doll.getDollName() + " : Skipped screenShot generation.", 3);
 				doll.chatMessage(doll.getDollName() + " :   " + ex.getMessage(), 3);
 			}
+			
+	        doll.spawnParticle("happyVillager");
+	        doll.spawnParticle("happyVillager");
+	        doll.spawnParticle("happyVillager");
 		}
 		return null;
 	}

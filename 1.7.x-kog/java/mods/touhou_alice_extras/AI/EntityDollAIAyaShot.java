@@ -69,5 +69,8 @@ public class EntityDollAIAyaShot  extends EntityDollAIBase{
 				PacketHandler.INSTANCE.sendTo(new MessageAyaShot(theDoll), playerMP);
 			}
 		}
+
+        theDoll.playSound("cloth.dig", 0.2F, 2.0F);
+        theDoll.playSound("random.click", 0.2F, 2.0F);
 	}
 }
