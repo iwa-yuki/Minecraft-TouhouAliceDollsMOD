@@ -11,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPumpkin;
@@ -25,11 +26,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.*;
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.fml.common.FMLLog;
 
 import java.util.Random;
 import java.util.List;
@@ -68,7 +70,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         isHover = false;
         targetEntity = null;
         isChunkLoad = false;
-        getNavigator().setAvoidsWater(true);
+        ((PathNavigateGround)getNavigator()).func_179690_a(true);
 
         inventory = new ItemStack[getSizeInventory()];
     }
@@ -180,8 +182,9 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     }
 
     /** 落下時の処理 */
+    
     @Override
-    protected void fall(float par1)
+    public void fall(float par1, float damageMultiplier)
     {
         if(isSlowFall || isHover)
         {
@@ -189,7 +192,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
             return;
         }
         
-        super.fall(par1);
+        super.fall(par1, damageMultiplier);
     }
     
     public float field_70886_e;
@@ -262,7 +265,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         if (!this.worldObj.isRemote && !this.dead)
         {
             List list = this.worldObj.getEntitiesWithinAABB(
-                EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
+                EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             Iterator iterator = list.iterator();
 
             while (iterator.hasNext())
@@ -351,7 +354,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                 }
                 for(int i=0; i<7; ++i)
                 {
-                    spawnParticle("smoke");
+                    spawnParticle(EnumParticleTypes.SMOKE_NORMAL);
                 }
                 playSound("fire.ignite", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
                 if (!par1EntityPlayer.capabilities.isCreativeMode
@@ -595,7 +598,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     /** 人形の名前を取得 <br /> NameTagで名前が付けられている場合はそちらを優先する */
     public String getDollName()
     {
-        return this.hasCustomNameTag() ? this.getCustomNameTag() : DollRegistry.getDollName(getDollID());
+        return this.hasCustomName() ? this.getCustomNameTag() : DollRegistry.getDollName(getDollID());
     }
 
     /** 持ち主の名前を設定 */
@@ -638,7 +641,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         if(entity instanceof EntityPlayer)
         {
             EntityPlayer entityplayer = (EntityPlayer)entity;
-            return entityplayer.getDisplayName().equalsIgnoreCase(getOwnerName());
+            return entityplayer.getDisplayNameString().equalsIgnoreCase(getOwnerName());
         }
         return false;
 	}
@@ -707,7 +710,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     /** パトロールモードに設定 */
     public void setPatrolMode()
     {
-        spawnParticle("note");
+        spawnParticle(EnumParticleTypes.NOTE);
         if(!worldObj.isRemote)
         {
             int state = getStateBits();
@@ -726,7 +729,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     /** フォローモードに設定 */
     public void setFollowMode()
     {
-        spawnParticle("heart");
+        spawnParticle(EnumParticleTypes.HEART);
         if(!worldObj.isRemote)
         {
             int state = getStateBits();
@@ -1207,14 +1210,14 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 
     /** GUIを開けた時に呼ばれる */
     @Override
-    public void openInventory()
+    public void openInventory(EntityPlayer playerIn)
     {
         setGUIOpened(true);
     }
 
     /** GUIを閉じた時に呼ばれる */
     @Override
-    public void closeInventory()
+    public void closeInventory(EntityPlayer playerIn)
     {
         setGUIOpened(false);
     }
@@ -1337,6 +1340,31 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     }
 
 
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clearInventory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
     ////////////////////////////////////////////////////////////////////////////
     // チャット・ログ出力
 
@@ -1374,7 +1402,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
      * パーティクルの出力
      * @param type パーティクルの種類
      */
-    public void spawnParticle(String type)
+    public void spawnParticle(EnumParticleTypes type)
     {
         Random r = this.rand;
         double x = this.posX + (double)(r.nextFloat() * this.width * 2.0F) - (double)this.width;
