@@ -1,0 +1,44 @@
+[
+{
+  "modid": "touhou_alice_core",
+  "name": "Alice's Core MOD",
+  "description": "This MOD is fanfiction of \"Shanghai Alice Gengakudan(Touhou Project)\".",
+  "version": "1.8-ich",
+  "mcversion": "1.8",
+  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=832",
+  "updateUrl": "",
+  "authors": ["iwa_yukinoshita"],
+  "credits": "",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
+  "screenshots": [],
+  "dependencies": []
+},
+{
+  "modid": "touhou_alice_dolls",
+  "name": "Alice's Dolls MOD",
+  "description": "This MOD is fanfiction of \"Shanghai Alice Gengakudan(Touhou Project)\".",
+  "version": "1.8-ich",
+  "mcversion": "1.8",
+  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=832",
+  "updateUrl": "",
+  "authors": ["iwa_yukinoshita"],
+  "credits": "",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
+  "screenshots": [],
+  "dependencies": []
+},
+{
+  "modid": "touhou_alice_extras",
+  "name": "Alice's Dolls Ex",
+  "description": "This MOD is fanfiction of \"Shanghai Alice Gengakudan(Touhou Project)\".",
+  "version": "1.8",
+  "mcversion": "1.8",
+  "url": "http://forum.minecraftuser.jp/viewtopic.php?f=13&t=832",
+  "updateUrl": "",
+  "authors": ["iwa_yukinoshita"],
+  "credits": "",
+  "logoFile": "/assets/touhou_alice_common/textures/logo_s.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
