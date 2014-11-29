@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "items/dollcore"
+        "layer0": "touhou_alice_core:items/dollcore"
     },
     "display": {
         "thirdperson": {

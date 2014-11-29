@@ -6,6 +6,8 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -37,6 +39,16 @@ public class TouhouAliceCore
     @Instance(MODID)
     public TouhouAliceCore instance;
     
+    /**
+     * サーバー・クライアントでの処理振り分け用プロキシ
+     */
+    @SidedProxy(
+        clientSide = "mods.touhou_alice_core.client.ClientProxy",
+        serverSide = "mods.touhou_alice_core.CommonProxy"
+        )
+    public static CommonProxy proxy;
+    
+    
     /** 人形のEntityID */
 	private int entityAliceDollID;
 	
@@ -46,16 +58,19 @@ public class TouhouAliceCore
 	/** 人形アイテム */
 	public static Item itemAliceDoll;
     
-    /**
-     * 
-     * @param event
-     */
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
     	LoadConfig(event);
     	registerItems();
     	registerEntities();
+    }
+    
+    @EventHandler
+    public void preInit(FMLInitializationEvent event)
+    {
+        proxy.registerItemModel(TouhouAliceCore.itemDollCore, MODID + ":dollcore");
     }
     
     ///////////////////////////////////////////////////////////////////////////

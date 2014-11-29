@@ -19,7 +19,8 @@ public class ItemDollCore extends Item {
 		this.maxStackSize = 16;
         this.setMaxDamage(0);
 		setCreativeTab(CreativeTabs.tabTools);
-        setUnlocalizedName(TouhouAliceCore.MODID + ":dollcore");
+        // setUnlocalizedName(TouhouAliceCore.MODID + ":dollcore");
+        setUnlocalizedName("dollcore");
         
         isUsing = false;
 	}
