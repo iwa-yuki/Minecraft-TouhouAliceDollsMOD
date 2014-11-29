@@ -13,6 +13,7 @@ import mods.touhou_alice_core.EntityAliceDoll;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.crash.CrashReport;
@@ -20,14 +21,15 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IMessage> {
 
@@ -62,9 +64,9 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
 				doll.chatMessage(doll.getDollName() + " :   " + ex.getMessage(), 3);
 			}
 			
-	        doll.spawnParticle("happyVillager");
-	        doll.spawnParticle("happyVillager");
-	        doll.spawnParticle("happyVillager");
+	        doll.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY);
+	        doll.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY);
+	        doll.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY);
 		}
 		return null;
 	}
@@ -82,15 +84,15 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
 	 * スクリーンショット生成のためのレンダリング
 	 */
 	private void renderScreenShot(Minecraft mc, EntityAliceDoll doll) {
-		
-		// 人形をカメラマンに設定
-	    mc.renderViewEntity = doll;
 
 	    // 撮影用にパラメータを変更
-	    double posY = mc.renderViewEntity.posY;
-        mc.renderViewEntity.posY -= (1.62D - mc.renderViewEntity.getEyeHeight());
-        float rotationYaw = mc.renderViewEntity.rotationYaw;
-        doll.rotationYaw = mc.renderViewEntity.rotationYawHead;
+	    double posY = doll.posY;
+        doll.posY -= (1.62D - doll.getEyeHeight());
+        float rotationYaw = doll.rotationYaw;
+        doll.rotationYaw = doll.getRotationYawHead();
+		
+		// 人形をカメラマンに設定
+		mc.func_175607_a(doll);
         
         int thirdPersonView = mc.gameSettings.thirdPersonView;
         mc.gameSettings.thirdPersonView = 0;
@@ -132,13 +134,15 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
 
                 if (OpenGlHelper.shadersSupported)
                 {
-                    if (mc.entityRenderer.theShaderGroup != null)
+                    mc.renderGlobal.func_174975_c();
+
+                    if (mc.entityRenderer.getShaderGroup() != null)
                     {
-                        GL11.glMatrixMode(GL11.GL_TEXTURE);
-                        GL11.glPushMatrix();
-                        GL11.glLoadIdentity();
-                        mc.entityRenderer.theShaderGroup.loadShaderGroup(1f);
-                        GL11.glPopMatrix();
+                        GlStateManager.matrixMode(5890);
+                        GlStateManager.pushMatrix();
+                        GlStateManager.loadIdentity();
+                        mc.entityRenderer.getShaderGroup().loadShaderGroup(1f);
+                        GlStateManager.popMatrix();
                     }
 
                     mc.getFramebuffer().bindFramebuffer(true);
@@ -146,11 +150,11 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
             }
             else
             {
-                GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
-                GL11.glMatrixMode(GL11.GL_PROJECTION);
-                GL11.glLoadIdentity();
-                GL11.glMatrixMode(GL11.GL_MODELVIEW);
-                GL11.glLoadIdentity();
+                GlStateManager.viewport(0, 0, mc.displayWidth, mc.displayHeight);
+                GlStateManager.matrixMode(5889);
+                GlStateManager.loadIdentity();
+                GlStateManager.matrixMode(5888);
+                GlStateManager.loadIdentity();
                 mc.entityRenderer.setupOverlayRendering();
             }
         }
@@ -172,10 +176,10 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
         
         mc.gameSettings.thirdPersonView = thirdPersonView;
 
-        mc.renderViewEntity.rotationYaw = rotationYaw;
-        mc.renderViewEntity.posY = posY;
+        doll.rotationYaw = rotationYaw;
+        doll.posY = posY;
 
-        mc.renderViewEntity = mc.thePlayer;
+        mc.func_175607_a(mc.thePlayer);
 
 	}
 }

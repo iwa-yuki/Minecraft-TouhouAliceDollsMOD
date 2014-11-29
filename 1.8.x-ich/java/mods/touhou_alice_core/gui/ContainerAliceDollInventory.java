@@ -1,7 +1,7 @@
 package mods.touhou_alice_core.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import mods.touhou_alice_core.EntityAliceDoll;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -9,7 +9,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class ContainerAliceDollInventory extends Container {
@@ -22,7 +21,7 @@ public class ContainerAliceDollInventory extends Container {
 		theDoll = doll;
         numRows = doll.getSizeInventory() / 9;
         
-		theDoll.openInventory();
+		//theDoll.openInventory();
 		
         int i = (this.numRows - 4) * 18;
         int j;
@@ -45,9 +44,9 @@ public class ContainerAliceDollInventory extends Container {
             this.addSlotToContainer(new Slot(theDoll, k + (this.numRows-1) * 9, 8 + k * 18, 18 + (this.numRows-1) * 18)
             {
                 @SideOnly(Side.CLIENT)
-                public IIcon getBackgroundIconIndex()
+                public String func_178171_c()
                 {
-                    return ItemArmor.func_94602_b(armorIndex);
+                    return ItemArmor.EMPTY_SLOT_NAMES[armorIndex];
                 }
             });
         }
@@ -111,7 +110,7 @@ public class ContainerAliceDollInventory extends Container {
     public void onContainerClosed(EntityPlayer par1EntityPlayer)
     {
         super.onContainerClosed(par1EntityPlayer);
-        this.theDoll.closeInventory();
+        //this.theDoll.closeInventory();
     }
 	
 	

@@ -36,8 +36,8 @@ public class GuiAliceDollInventory extends GuiContainer {
 	@Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
     {
-        this.fontRendererObj.drawString(this.dollInventory.hasCustomInventoryName() ? this.dollInventory.getInventoryName() : I18n.format(this.dollInventory.getInventoryName(), new Object[0]), 8, 6, 4210752);
-        this.fontRendererObj.drawString(this.playerInventory.hasCustomInventoryName() ? this.playerInventory.getInventoryName() : I18n.format(this.playerInventory.getInventoryName(), new Object[0]), 8, this.ySize - 96 + 2, 4210752);
+        this.fontRendererObj.drawString(this.dollInventory.getDisplayName().getUnformattedText(), 8, 6, 4210752);
+        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
     
 	@Override

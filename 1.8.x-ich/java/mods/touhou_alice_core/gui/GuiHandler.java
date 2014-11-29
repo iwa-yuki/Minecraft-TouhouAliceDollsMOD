@@ -4,7 +4,7 @@ import mods.touhou_alice_core.EntityAliceDoll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler {
 

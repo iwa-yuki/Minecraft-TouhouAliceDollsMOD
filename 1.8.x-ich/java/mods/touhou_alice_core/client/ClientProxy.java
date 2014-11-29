@@ -3,8 +3,8 @@
 
 package mods.touhou_alice_core.client;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import mods.touhou_alice_core.*;
 
 /**
@@ -18,7 +18,7 @@ public class ClientProxy extends CommonProxy
     @Override
     public void registerRenderers()
     {
-        render = new RenderAliceDoll();
+        render = new RenderAliceDoll(Minecraft.getMinecraft().getRenderManager());
         RenderingRegistry.registerEntityRenderingHandler(
                 EntityAliceDoll.class, render);
     }

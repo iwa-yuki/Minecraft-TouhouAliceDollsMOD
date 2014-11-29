@@ -6,20 +6,26 @@ package mods.touhou_alice_core;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.Facing;
+import net.minecraft.stats.StatList;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.IIcon;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -30,8 +36,6 @@ import mods.touhou_alice_core.dolls.*;
  */
 public class ItemAliceDoll extends Item
 {
-    @SideOnly(Side.CLIENT)
-    private IIcon[] iconList;
 
     public ItemAliceDoll()
     {
@@ -41,7 +45,13 @@ public class ItemAliceDoll extends Item
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
         setUnlocalizedName("alicedoll");
-        setTextureName("touhou_alice_common:alicedoll");
+    }
+
+    public String getItemStackDisplayName(ItemStack stack)
+    {
+        String s = ("" + StatCollector.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
+
+        return s;
     }
 
     @Override
@@ -49,38 +59,38 @@ public class ItemAliceDoll extends Item
      * アイテムを使ったときに呼ばれる
      */
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer,
-                             World world, int i, int j, int k, int side,
+                             World world, BlockPos pos, EnumFacing side,
                              float vecX, float vecY, float vecZ)
     {
         if (world.isRemote)
         {
             return true;
         }
+        else if (!entityplayer.func_175151_a(pos.offset(side), side, itemstack))
+        {
+            return false;
+        }
         else
         {
-            Block block = world.getBlock(i, j, k);
-            i += Facing.offsetsXForSide[side];
-            j += Facing.offsetsYForSide[side];
-            k += Facing.offsetsZForSide[side];
-            double offsetY = 0.0D;
+            IBlockState iblockstate = world.getBlockState(pos);
 
-            if (side == 1 && block != null && block.getRenderType() == 11)
+            pos = pos.offset(side);
+            double d0 = 0.0D;
+
+            if (side == EnumFacing.UP && iblockstate instanceof BlockFence)
             {
-                offsetY = 0.5D;
+                d0 = 0.5D;
             }
 
-            Entity entity = spawnCreature(world, itemstack.getItemDamage(), (double)i + 0.5D, (double)j + offsetY, (double)k + 0.5D);
+            Entity entity = spawnCreature(world, itemstack.getMetadata(), (double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D);
 
             if (entity != null)
             {
                 if (entity instanceof EntityLivingBase && itemstack.hasDisplayName())
                 {
-                    ((EntityLiving)entity).setCustomNameTag(itemstack.getDisplayName());
+                    entity.setCustomNameTag(itemstack.getDisplayName());
                 }
-                if (entity instanceof EntityAliceDoll)
-                {
-                    ((EntityAliceDoll)entity).setOwner(entityplayer);
-                }
+
                 if (!entityplayer.capabilities.isCreativeMode)
                 {
                     --itemstack.stackSize;
@@ -88,6 +98,66 @@ public class ItemAliceDoll extends Item
             }
 
             return true;
+        }
+    }
+    
+    @Override
+    /**
+     * アイテムを持った状態で右クリックしたときに呼ばれる
+     */
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
+    {
+        if (worldIn.isRemote)
+        {
+            return itemStackIn;
+        }
+        else
+        {
+            MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(worldIn, playerIn, true);
+
+            if (movingobjectposition == null)
+            {
+                return itemStackIn;
+            }
+            else
+            {
+                if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+                {
+                    BlockPos blockpos = movingobjectposition.func_178782_a();
+
+                    if (!worldIn.isBlockModifiable(playerIn, blockpos))
+                    {
+                        return itemStackIn;
+                    }
+
+                    if (!playerIn.func_175151_a(blockpos, movingobjectposition.field_178784_b, itemStackIn))
+                    {
+                        return itemStackIn;
+                    }
+
+                    if (worldIn.getBlockState(blockpos).getBlock() instanceof BlockLiquid)
+                    {
+                        Entity entity = spawnCreature(worldIn, itemStackIn.getMetadata(), (double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
+
+                        if (entity != null)
+                        {
+                            if (entity instanceof EntityLivingBase && itemStackIn.hasDisplayName())
+                            {
+                                ((EntityLiving)entity).setCustomNameTag(itemStackIn.getDisplayName());
+                            }
+
+                            if (!playerIn.capabilities.isCreativeMode)
+                            {
+                                --itemStackIn.stackSize;
+                            }
+
+                            playerIn.triggerAchievement(StatList.objectUseStats[Item.getIdFromItem(this)]);
+                        }
+                    }
+                }
+
+                return itemStackIn;
+            }
         }
     }
 
@@ -117,7 +187,7 @@ public class ItemAliceDoll extends Item
                 entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(world.rand.nextFloat() * 360.0F), 0.0F);
                 entity.rotationYawHead = entity.rotationYaw;
                 entity.renderYawOffset = entity.rotationYaw;
-                entity.onSpawnWithEgg(null);
+                entity.func_180482_a(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
                 entity.setDollID(id);
                 world.spawnEntityInWorld(entity);
                 entity.playLivingSound();
@@ -125,18 +195,6 @@ public class ItemAliceDoll extends Item
 
             return entity;
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    /**
-     * ダメージ値からアイコンを選択<br />染料アイテムと同じ
-     * @param damage ダメージ値
-     * @return アイコン
-     */
-    public IIcon getIconFromDamage(int damage)
-    {
-        return iconList[damage];
     }
     
     @SideOnly(Side.CLIENT)
@@ -154,27 +212,6 @@ public class ItemAliceDoll extends Item
             if(DollRegistry.isExist(j) && (!DollRegistry.isSecret(j)))
             {
                 par3List.add(new ItemStack(par1, 1, j));
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    /**
-     * アイコンの登録
-     * @param par1IconRegister 登録に使うIconRegister
-     */
-    public void registerIcons(IIconRegister par1IconRegister)
-    {
-        this.iconList = new IIcon[DollRegistry.getDollListLength()];
-
-        for (int i = 0; i < DollRegistry.getDollListLength(); ++i)
-        {
-            String name = DollRegistry.getIconName(i);
-            if(name != null && name != "")
-            {
-                this.iconList[i] = par1IconRegister.registerIcon(
-                    this.getIconString() + "_" + name);
             }
         }
     }

@@ -13,7 +13,7 @@ import net.minecraftforge.common.ForgeChunkManager.*;
 import net.minecraftforge.common.DimensionManager;
 import java.util.*;
 import com.google.common.collect.*;
-import cpw.mods.fml.common.FMLLog;
+import net.minecraftforge.fml.common.FMLLog;
 import java.util.logging.Level;
 
 import mods.touhou_alice_core.*;
@@ -60,7 +60,7 @@ public class DollChunkLoader implements LoadingCallback
                         ImmutableSet chunkList =  doll.ticket.getChunkList();
                         for(Object c : chunkList)
                         {
-                            FMLLog.info("    + %s : dim %d", c.toString(), doll.worldObj.provider.dimensionId);
+                            FMLLog.info("    + %s : dim %d", c.toString(), doll.worldObj.provider.getDimensionId());
                         }
                     }
                     continue;

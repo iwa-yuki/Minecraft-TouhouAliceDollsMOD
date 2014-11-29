@@ -35,7 +35,7 @@ public class EntityDollAIWatchClosest extends EntityDollAIBase
         }
 
         this.closestEntity = this.theWorld.findNearestEntityWithinAABB(
-            this.watchedClass, this.theDoll.boundingBox.expand(
+            this.watchedClass, this.theDoll.getEntityBoundingBox().expand(
                 (double)this.range, 3.0D, (double)this.range), this.theDoll);
 
         return this.closestEntity != null;

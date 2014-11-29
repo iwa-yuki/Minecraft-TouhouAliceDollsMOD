@@ -2,7 +2,7 @@ package mods.touhou_alice_core.packet;
 
 import mods.touhou_alice_core.EntityAliceDoll;
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageAyaShot implements IMessage {
 	

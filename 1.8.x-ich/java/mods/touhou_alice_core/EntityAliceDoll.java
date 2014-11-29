@@ -389,7 +389,6 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 	}
 
     /** AIを使うかどうか */
-    @Override
     protected boolean isAIEnabled()
     {
         return true;
@@ -422,7 +421,8 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
         {
             if(ridingEntity instanceof EntityPlayer)
             {
-                return (double)(yOffset - 1.1F);
+                float yOffset = 0.0f;
+				return (double)(yOffset  - 1.1F);
             }
         }
 
@@ -1103,17 +1103,11 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
 
     /** インベントリの名前 */
     @Override
-    public String getInventoryName()
+    public String getName()
     {
         return getDollName();
     }
 
-    /** ローカライズされているかどうか */
-    @Override
-    public boolean hasCustomInventoryName()
-    {
-        return true;
-    }
 
     /** スタック数の限界 */
     @Override
@@ -1123,7 +1117,6 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
     }
 
     /** インベントリが変更されたときに呼ばれる */
-    @Override
     public void markDirty()
     {
         // インベントリの後ろから4スロットを防具スロットと共有化するための処理
@@ -1151,7 +1144,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory
                 }
                 else if(item instanceof ItemBlock)
                 {
-                    Block block = ((ItemBlock)item).field_150939_a;
+                    Block block = ((ItemBlock)item).getBlock();
                     if(block instanceof BlockPumpkin)
                     {
                         setCurrentItemOrArmor(4-i, itemstack);

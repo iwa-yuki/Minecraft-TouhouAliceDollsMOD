@@ -27,13 +27,12 @@ public class ItemDollCore extends Item
         setMaxStackSize(16);
         setCreativeTab(CreativeTabs.tabTools);
         setUnlocalizedName("dollcore");
-        setTextureName("touhou_alice_common:dollcore");
     }
 
 	@Override
 	public EnumAction getItemUseAction(ItemStack itemstack)
 	{
-		return EnumAction.bow;
+		return EnumAction.BOW;
 	}
 
 	@Override
@@ -80,8 +79,8 @@ public class ItemDollCore extends Item
      */
     public void onCharged(World world, Entity entity)
     {
-        List<EntityAliceDoll> dolls = world.selectEntitiesWithinAABB(
-            EntityAliceDoll.class, entity.boundingBox.expand(
+        List<EntityAliceDoll> dolls = world.func_175647_a(
+            EntityAliceDoll.class, entity.getBoundingBox().expand(
                 128.0D, 128.0D, 128.0D),
             new DollSelector((EntityPlayer)entity));
         int size = dolls.size();

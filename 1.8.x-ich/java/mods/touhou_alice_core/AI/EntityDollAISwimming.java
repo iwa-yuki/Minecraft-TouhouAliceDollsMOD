@@ -1,5 +1,6 @@
 package mods.touhou_alice_core.AI;
 
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.World;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -14,7 +15,7 @@ public class EntityDollAISwimming extends EntityDollAIBase
     {
         super(doll);
         this.setMutexBits(8);
-        doll.getNavigator().setCanSwim(true);
+        ((PathNavigateGround)doll.getNavigator()).func_179693_d(true);
     }
 
     @Override
