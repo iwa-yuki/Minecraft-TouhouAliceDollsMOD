@@ -22,7 +22,7 @@ public class CommonProxy {
     /**
      * アイテムモデルの登録
      */
-    public void registerItemModel(Item item, String source)
+    public void registerItemModel(Item item, int meta, String source)
     {
         // 何もしない
     }
