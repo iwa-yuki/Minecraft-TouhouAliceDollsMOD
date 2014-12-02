@@ -2,6 +2,7 @@ package mods.touhou_alice_core.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -34,6 +35,8 @@ public class ClientProxy extends CommonProxy {
 	@Override
     public void registerItemModel(Item item, int meta, String source)
     {
+		ModelBakery.addVariantName(item, item.getUnlocalizedName(), source);
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(source, "inventory"));
     }
+	
 }
