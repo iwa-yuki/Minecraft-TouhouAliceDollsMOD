@@ -39,7 +39,7 @@ public class TouhouAliceCore
      * MODの唯一のインスタンス
      */
     @Instance(MODID)
-    public TouhouAliceCore instance;
+    public static TouhouAliceCore instance;
     
     /**
      * サーバー・クライアントでの処理振り分け用プロキシ
