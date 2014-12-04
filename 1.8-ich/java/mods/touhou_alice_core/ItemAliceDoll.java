@@ -71,7 +71,7 @@ public class ItemAliceDoll extends Item {
                 d0 = 0.5D;
             }
 
-            Entity entity = spawnCreature(world, itemstack.getMetadata(), (double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D);
+            Entity entity = spawnAliceDoll(world, entityplayer, itemstack.getMetadata(), (double)pos.getX() + 0.5D, (double)pos.getY() + d0, (double)pos.getZ() + 0.5D);
 
             if (entity != null)
             {
@@ -126,13 +126,13 @@ public class ItemAliceDoll extends Item {
 
                     if (worldIn.getBlockState(blockpos).getBlock() instanceof BlockLiquid)
                     {
-                        Entity entity = spawnCreature(worldIn, itemStackIn.getMetadata(), (double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
+                        EntityAliceDoll doll = spawnAliceDoll(worldIn, playerIn, itemStackIn.getMetadata(), (double)blockpos.getX() + 0.5D, (double)blockpos.getY() + 0.5D, (double)blockpos.getZ() + 0.5D);
 
-                        if (entity != null)
+                        if (doll != null)
                         {
-                            if (entity instanceof EntityLivingBase && itemStackIn.hasDisplayName())
+                            if (doll instanceof EntityLivingBase && itemStackIn.hasDisplayName())
                             {
-                                ((EntityLiving)entity).setCustomNameTag(itemStackIn.getDisplayName());
+                                ((EntityLiving)doll).setCustomNameTag(itemStackIn.getDisplayName());
                             }
 
                             if (!playerIn.capabilities.isCreativeMode)
@@ -159,7 +159,7 @@ public class ItemAliceDoll extends Item {
      * @param z スポーンさせるZ座標
      * @return 人形のEntity
      */
-    public static Entity spawnCreature(World world, int id, double x, double y, double z)
+    public static EntityAliceDoll spawnAliceDoll(World world, EntityPlayer owner, int id, double x, double y, double z)
     {
         if (!DollRegistry.isExist(id))
         {
@@ -178,6 +178,7 @@ public class ItemAliceDoll extends Item {
                 entity.renderYawOffset = entity.rotationYaw;
                 entity.func_180482_a(world.getDifficultyForLocation(new BlockPos(entity)), (IEntityLivingData)null);
                 entity.setDollID(id);
+                entity.setOwner(owner);
                 world.spawnEntityInWorld(entity);
                 entity.playLivingSound();
             }
