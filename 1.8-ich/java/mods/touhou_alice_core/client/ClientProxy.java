@@ -21,21 +21,12 @@ public class ClientProxy extends CommonProxy {
     }
 
     /**
-     * 人形モデルの登録
-     */
-	@Override
-    public void registerDollModel(int id)
-    {
-        // 何もしない
-    }
-
-    /**
      * アイテムモデルの登録
      */
 	@Override
     public void registerItemModel(Item item, int meta, String source)
     {
-		ModelBakery.addVariantName(item, item.getUnlocalizedName(), source);
+		ModelBakery.addVariantName(item, source);
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(source, "inventory"));
     }
 	

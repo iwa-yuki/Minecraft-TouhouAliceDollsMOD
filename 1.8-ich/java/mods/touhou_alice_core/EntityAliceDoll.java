@@ -8,10 +8,13 @@ import com.google.common.collect.Lists;
 
 import mods.touhou_alice_core.ai.EntityDollAIBase;
 import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.gui.GuiAliceDollInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,8 +29,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.fml.common.FMLLog;
 
 /**
  * 人形エンティティクラス
@@ -37,6 +47,10 @@ import net.minecraft.world.World;
 public class EntityAliceDoll extends EntityLiving implements IInventory {
 	
 	private int localDollID = -1;
+	private ItemStack mainHeldItem = null;
+	private boolean isHover = false;
+	private boolean isSlowFall = true;
+	private Entity targetEntity = null;
 
 	public EntityAliceDoll(World worldIn) {
 		super(worldIn);
@@ -44,6 +58,9 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
 		setDollID(0);
 	}
 	
+	///////////////////////////////////////////////////////////////////////////
+	// 初期化
+    
     @Override
     protected void entityInit()
     {
@@ -52,6 +69,197 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
         initDataWatcher();
     }
     
+    /** 人形IDが変更されたときに呼ばれる */
+    private void onChangeDollID() {
+    	
+    	// インベントリの初期化・サイズ変更
+    	if(inventory == null) {
+    		inventory = new ItemStack[getSizeInventory()];
+    	}
+    	else if(inventory.length < getSizeInventory()) {
+    		ItemStack[] newInventory = new ItemStack[getSizeInventory()];
+    		for(int i=0; i < inventory.length; ++i) {
+    			newInventory[i] = inventory[i];
+    			inventory[i] = null;
+    		}
+    		inventory = newInventory;
+    	}
+    	else if(inventory.length > getSizeInventory()) {
+    		// インベントリが小さくなる場合はあふれたアイテムが消失する
+    		ItemStack[] newInventory = new ItemStack[getSizeInventory()];
+    		for(int i=0; i < getSizeInventory(); ++i) {
+    			newInventory[i] = inventory[i];
+    			inventory[i] = null;
+    		}
+    		inventory = newInventory;
+    	}
+    	
+    	// 手持ちアイテムの設定
+    	mainHeldItem = DollRegistry.getHeldItem(localDollID);
+    	
+    	// 人形の大きさを設定
+    	setSize(DollRegistry.getWidth(localDollID), DollRegistry.getHeight(localDollID));
+    	
+    	// 人形の体力を設定
+        getEntityAttribute(SharedMonsterAttributes.maxHealth)
+        	.setBaseValue(DollRegistry.getHealth(localDollID));
+        setHealth(this.getMaxHealth());
+        
+        // 人形の移動速度を設定
+        getEntityAttribute(SharedMonsterAttributes.movementSpeed)
+        	.setBaseValue(DollRegistry.getSpeed(localDollID));
+        
+        // AIを初期化
+        clearAI();
+        DollRegistry.onInitializeAI(localDollID, this);
+        
+        FMLLog.info("%s : Doll(%s[%s]) is initialized.",
+                (worldObj.isRemote?"R":"S"),
+                DollRegistry.getDollName(localDollID),
+                getUniqueID().toString());
+	}   
+
+    ///////////////////////////////////////////////////////////////////////////
+	// 動作
+    
+    @Override
+    public void onLivingUpdate()
+    {
+        // 腕を振る処理
+        this.updateArmSwingProgress();
+
+        if(isHover) // 浮遊する
+        {
+        	updateHoveringState();
+        }
+        else if(isSlowFall) // ふわふわと落下
+        {
+            updateFallingState();
+        }
+        
+        super.onLivingUpdate();
+
+        if(localDollID != getDollID())
+        {
+            // IDが異なる場合には変更処理を行う
+            setDollID(getDollID());
+        }
+
+        // 何らかの理由でライドオン状態が解除されたときに
+        // 内部状態との整合性を保つための処理
+        if(!worldObj.isRemote && isRideonMode() && !isOwner(ridingEntity))
+        {
+            setStandbyMode();
+        }
+
+        // ライドオンモード時は自動回復
+        if(!worldObj.isRemote && isRideonMode())
+        {
+            heal(1F);
+        }
+
+        // アイテム回収
+        pickupItem();
+
+        // チャンクローダー処理
+        if(enableChunkLoad())
+        {
+            updateChunkLoad();
+        }
+        else
+        {
+            releaseChunkLoad();
+        }
+    }
+    
+    /** 落下時の処理 */
+    @Override
+    public void fall(float distance, float damageMultiplier)
+    {
+        if(isSlowFall || isHover)
+        {
+            // 落下ダメージなし
+            return;
+        }
+        
+        super.fall(distance, damageMultiplier);
+    }
+    
+    public float field_70886_e;
+    public float destPos;
+    public float field_70884_g;
+    public float field_70888_h;
+    public float field_70889_i = 1.0F;
+    protected void updateFallingState()
+    {
+        this.field_70888_h = this.field_70886_e;
+        this.field_70884_g = this.destPos;
+        this.destPos = (float)((double)this.destPos + (double)(this.onGround ? -1 : 4) * 0.3D);
+
+        if (this.destPos < 0.0F)
+        {
+            this.destPos = 0.0F;
+        }
+
+        if (this.destPos > 1.0F)
+        {
+            this.destPos = 1.0F;
+        }
+
+        if (!this.onGround && this.field_70889_i < 1.0F)
+        {
+            this.field_70889_i = 1.0F;
+        }
+
+        this.field_70889_i = (float)((double)this.field_70889_i * 0.9D);
+
+        if (!this.onGround && this.motionY < 0.0D)
+        {
+            this.motionY *= 0.6D;
+        }
+
+        this.field_70886_e += this.field_70889_i * 2.0F;
+    }
+    
+    /**
+     * 浮遊動作(参考：Wither)
+     */
+    protected void updateHoveringState()
+    {
+        this.motionY *= 0.6000000238418579D;
+
+        if (!this.worldObj.isRemote && this.targetEntity != null)
+        {
+            if (this.posY < targetEntity.posY)
+            {
+                if (this.motionY < 0.0D)
+                {
+                    this.motionY = 0.0D;
+                }
+
+                this.motionY += (0.5D - this.motionY) * 0.6000000238418579D;
+            }
+
+            double diffX = targetEntity.posX - this.posX;
+            double diffZ = targetEntity.posZ - this.posZ;
+            double diffSq = diffX * diffX + diffZ * diffZ;
+            double diff;
+
+            if (diffSq > 9.0D)
+            {
+                diff = (double)MathHelper.sqrt_double(diffSq);
+                this.motionX += (diffX / diff * 0.5D - this.motionX) * 0.6000000238418579D;
+                this.motionZ += (diffZ / diff * 0.5D - this.motionZ) * 0.6000000238418579D;
+            }
+        }
+
+        if (this.motionX * this.motionX + this.motionZ * this.motionZ > 0.05000000074505806D)
+        {
+            this.rotationYaw = (float)Math.atan2(this.motionZ, this.motionX) * (180F / (float)Math.PI) - 90.0F;
+        }
+    }
+
+
     @Override
     protected boolean interact(EntityPlayer par1EntityPlayer)
     {
@@ -88,8 +296,8 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
                 else if(itemstack.getItem() == Item.getItemFromBlock(Blocks.chest))
                 {
                     // チェストで右クリックされたらインベントリを開く
-                    par1EntityPlayer.displayGUIChest(this);
-                	//par1EntityPlayer.openGui(TouhouAliceCore.instance, GuiAliceDollInventory.GuiID, this.worldObj, this.getEntityId(), 0, 0);
+                    //par1EntityPlayer.displayGUIChest(this);
+                	par1EntityPlayer.openGui(TouhouAliceCore.instance, GuiAliceDollInventory.GuiID, this.worldObj, this.getEntityId(), 0, 0);
                     return true;
                 }
                 else
@@ -137,29 +345,113 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
         return true;
     }
     
-	@Override
-	public double getYOffset()
-	{
-        if(ridingEntity != null)
+    /** 攻撃されたときに呼ばれる */
+    @Override
+    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+    {
+        Entity entitySource = par1DamageSource.getEntity();
+        
+        if(entitySource != null && entitySource instanceof EntityPlayer)
         {
-            if(ridingEntity instanceof EntityPlayer)
+            EntityPlayer player = (EntityPlayer)entitySource;
+            ItemStack currentItem = player.getHeldItem();
+            if(currentItem != null && currentItem.getItem() instanceof ItemDollCore)
             {
-            	// プレイヤーの頭に乗せるために上へずらす
-				return super.getYOffset() + 0.52D;
+                // ドールコアで攻撃されたので、アイテム化する
+                setDead();
+                
+                // インベントリのアイテムをドロップ
+                dropAllItems();
+                
+                // 人形アイテムをドロップ
+                dropItemStack(new ItemStack(TouhouAliceCore.itemAliceDoll, 1, getDollID()));
+                
+                // チャンクロード解除
+                if(isChunkLoad)
+                {
+                    chatMessage(getDollName() + " : Disable ChunkLoader.", 2);
+                    releaseChunkLoad();
+                }
+                
+                this.playSound("mob.chicken.plop", 1.0F,
+                               (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+                return false;
             }
         }
+        if(isRideonMode())
+        {
+            if(par1DamageSource instanceof EntityDamageSourceIndirect)
+            {
+                if(this.isOwner(entitySource))
+                {
+                    return false;
+                }
+            }
+        }
+        
+        return super.attackEntityFrom(par1DamageSource, par2);
+    }
+	
+    /** ライフがゼロになった時に呼ばれる */
+    @Override
+    public void onDeath(DamageSource par1DamageSource)
+    {
+        if (ForgeHooks.onLivingDeath(this, par1DamageSource))
+        {
+            return;
+        }
+        
+        Entity entity = par1DamageSource.getEntity();
+        EntityLivingBase entitylivingbase = this.func_94060_bK();
 
-		return super.getYOffset();
+        if (this.scoreValue >= 0 && entitylivingbase != null)
+        {
+            entitylivingbase.addToPlayerScore(this, this.scoreValue);
+        }
+
+        if (entity != null)
+        {
+            entity.onKillEntity(this);
+        }
+
+        this.dead = true;
+
+        // インベントリのアイテムをドロップ
+        dropAllItems();
+
+        // 人形アイテムをドロップ
+        ItemStack dropItem = new ItemStack(TouhouAliceCore.instance.itemAliceDoll, 1, getDollID());
+        if(hasCustomName()) {
+        	dropItem.setStackDisplayName(getCustomNameTag());
+        }
+        dropItemStack(dropItem);
+
+        // チャンクロード解除
+        if(isChunkLoad)
+        {
+            chatMessage(getDollName() + " : Disable ChunkLoader.", 2);
+            releaseChunkLoad();
+        }
+
+        this.worldObj.setEntityState(this, (byte)3);
+    }
+
+	/**
+	 * 攻撃対象のEntityを設定する
+	 * @param target 攻撃対象のentity
+	 */
+	public void setTargetEntity(Entity target)
+	{
+		this.targetEntity = target;
 	}
-
-    
-	///////////////////////////////////////////////////////////////////////////
-	// 初期化
-    
-    /** 人形IDが変更されたときに呼ばれる */
-    private void onChangeDollID() {
-		// TODO Auto-generated method stub
-    	inventory = new ItemStack[getSizeInventory()];
+	
+	/**
+	 * 攻撃対象のEntityを取得する
+	 * @return 攻撃対象のentity
+	 */
+	public Entity getTargetEntity()
+	{
+		return this.targetEntity;
 	}
     
 	///////////////////////////////////////////////////////////////////////////
@@ -179,6 +471,52 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
     		this.tasks.removeTask((EntityAIBase)(i.next()));
     	}
     }
+    
+	///////////////////////////////////////////////////////////////////////////
+	// 設定
+    
+    /** デスポーンするかどうか */
+	@Override
+	protected boolean canDespawn()
+	{
+		return false;
+	}
+	
+	/** 人形の位置調整 */
+	@Override
+	public double getYOffset()
+	{
+        if(ridingEntity != null)
+        {
+            if(ridingEntity instanceof EntityPlayer)
+            {
+            	// プレイヤーの頭に乗せるために上へずらす
+				return super.getYOffset() + 0.52D;
+            }
+        }
+
+		return super.getYOffset();
+	}
+	
+    /** 手持ちアイテム */
+    @Override
+    public ItemStack getHeldItem()
+    {
+        if(isEnable())
+        {
+            return mainHeldItem;
+        }
+
+        return super.getHeldItem();
+    }
+    
+    /** 目の高さ */
+    @Override
+	public float getEyeHeight()
+	{
+        return this.height * 0.9F;
+	}
+
     
 	///////////////////////////////////////////////////////////////////////////
 	// データ管理
@@ -676,31 +1014,31 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
         }
         setCurrentItemOrArmor(0, inventory[0]);
 
-        //TODO: チャンクロードするかどうかを設定する処理
-//        if(!worldObj.isRemote)
-//        {
-//            boolean flag = false;
-//            for(int i = getSizeInventory() - 1; i >= 0; i--)
-//            {
-//                if(inventory[i] != null && inventory[i].getUnlocalizedName().equals("item.clock"))
-//                {
-//                    flag = true;
-//                    break;
-//                }
-//            }
-//            
-//            if(isChunkLoad == true && flag == false)
-//            {
-//                releaseChunkLoad();
-//                isChunkLoad = false;
-//                chatMessage(getDollName() + " : Disable ChunkLoader.", 2);
-//            }
-//            else if(isChunkLoad == false && flag == true)
-//            {
-//                isChunkLoad = true;
-//                chatMessage(getDollName() + " : Enable ChunkLoader.", 2);
-//            }
-//        }
+        // チャンクロードするかどうかを設定する処理
+        if(!worldObj.isRemote)
+        {
+            boolean flag = false;
+            for(int i = getSizeInventory() - 1; i >= 0; i--)
+            {
+                if(inventory[i] != null && inventory[i].getUnlocalizedName().equals("item.clock"))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            
+            if(isChunkLoad == true && flag == false)
+            {
+                releaseChunkLoad();
+                isChunkLoad = false;
+                chatMessage(getDollName() + " : Disable ChunkLoader.", 2);
+            }
+            else if(isChunkLoad == false && flag == true)
+            {
+                isChunkLoad = true;
+                chatMessage(getDollName() + " : Enable ChunkLoader.", 2);
+            }
+        }
 
 	}
 
@@ -808,6 +1146,159 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
         par1NBTTagCompound.setTag("Items", nbttaglist);
     }
     
+    /** インベントリのスロットにアイテムを追加 */
+    public boolean addItemStackToInventory(ItemStack itemstack)
+    {
+        if (itemstack == null)
+        {
+            return false;
+        }
+        else if (itemstack.stackSize == 0)
+        {
+            return false;
+        }
+        else
+        {
+            int i;
+
+            if (itemstack.isItemDamaged())
+            {
+                i = this.getFirstEmptyStack();
+
+                if (i >= 0)
+                {
+                    this.inventory[i] = ItemStack.copyItemStack(itemstack);
+                    itemstack.stackSize = 0;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                do
+                {
+                    i = itemstack.stackSize;
+                    itemstack.stackSize = this.storePartialItemStack(itemstack);
+                }
+                while (itemstack.stackSize > 0 && itemstack.stackSize < i);
+
+                return itemstack.stackSize < i;
+            }
+        }
+    }
+    
+    /** 指定したアイテムをインベントリに追加 */
+    private int storePartialItemStack(ItemStack itemstack)
+    {
+        Item item = itemstack.getItem();
+        int j = itemstack.stackSize;
+        int k;
+
+        if (itemstack.getMaxStackSize() == 1)
+        {
+            k = this.getFirstEmptyStack();
+
+            if (k < 0)
+            {
+                return j;
+            }
+            else
+            {
+                if (this.inventory[k] == null)
+                {
+                    this.inventory[k] = ItemStack.copyItemStack(itemstack);
+                }
+
+                return 0;
+            }
+        }
+        else
+        {
+            k = this.storeItemStack(itemstack);
+
+            if (k < 0)
+            {
+                k = this.getFirstEmptyStack();
+            }
+
+            if (k < 0)
+            {
+                return j;
+            }
+            else
+            {
+                if (this.inventory[k] == null)
+                {
+                    this.inventory[k] = new ItemStack(item, 0, itemstack.getItemDamage());
+
+                    if (itemstack.hasTagCompound())
+                    {
+                        this.inventory[k].setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+                    }
+                }
+
+                int l = j;
+
+                if (j > this.inventory[k].getMaxStackSize() - this.inventory[k].stackSize)
+                {
+                    l = this.inventory[k].getMaxStackSize() - this.inventory[k].stackSize;
+                }
+
+                if (l > this.getInventoryStackLimit() - this.inventory[k].stackSize)
+                {
+                    l = this.getInventoryStackLimit() - this.inventory[k].stackSize;
+                }
+
+                if (l == 0)
+                {
+                    return j;
+                }
+                else
+                {
+                    j -= l;
+                    this.inventory[k].stackSize += l;
+                    return j;
+                }
+            }
+        }
+    }
+    
+    /** 近くにあるアイテムを回収する */
+    protected void pickupItem()
+    {
+        if (!this.worldObj.isRemote && !this.dead)
+        {
+            List list = this.worldObj.getEntitiesWithinAABB(
+                EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityItem entityitem = (EntityItem)iterator.next();
+
+                if (!entityitem.isDead && entityitem.getEntityItem() != null)
+                {
+                    ItemStack itemstack = entityitem.getEntityItem();
+
+                    if(this.addItemStackToInventory(itemstack))
+                    {
+                        this.playSound("random.pop", 0.2F,
+                                       ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                        if(itemstack.stackSize <= 0)
+                        {
+                            entityitem.setDead();
+                        }
+                    }
+                }
+            }
+            markDirty();
+        }
+    }
+
+    
     /** インベントリ内のすべてのアイテムをドロップする */
     public void dropAllItems()
     {
@@ -914,5 +1405,71 @@ public class EntityAliceDoll extends EntityLiving implements IInventory {
         }
 
         return -1;
+    }
+    
+
+    ////////////////////////////////////////////////////////////////////////////
+    // チャンクロード処理
+
+	private boolean isChunkLoad = false;
+    protected ChunkCoordIntPair currentChunk = null;
+    public Ticket ticket;
+
+    public boolean enableChunkLoad()
+    {
+        return isChunkLoad;
+    }
+    
+    public void updateChunkLoad()
+    {
+        if(worldObj.isRemote)
+        {
+            return;
+        }
+        
+        ChunkCoordIntPair chunk = new ChunkCoordIntPair((int)(posX)/16, (int)(posZ)/16);
+
+        if(currentChunk == null)
+        {
+            currentChunk = chunk;
+            TouhouAliceCore.instance.chunkloader.requestTicket(this);
+            for(int j = -1; j <= 1; j++)
+            {
+                for(int i = -1; i <= 1; i++)
+                {
+                    TouhouAliceCore.instance.chunkloader.addChunk(
+                        this, new ChunkCoordIntPair(chunk.chunkXPos + i, chunk.chunkZPos + j));
+                }
+            }
+        }
+        else if(!chunk.equals(currentChunk))
+        {
+            for(int j = -1; j <= 1; j++)
+            {
+                for(int i = -1; i <= 1; i++)
+                {
+                    TouhouAliceCore.instance.chunkloader.removeChunk(
+                        this, new ChunkCoordIntPair(currentChunk.chunkXPos + i, currentChunk.chunkZPos + j));
+                }
+            }
+            currentChunk = chunk;
+            for(int j = -1; j <= 1; j++)
+            {
+                for(int i = -1; i <= 1; i++)
+                {
+                    TouhouAliceCore.instance.chunkloader.addChunk(
+                        this, new ChunkCoordIntPair(chunk.chunkXPos + i, chunk.chunkZPos + j));
+                }
+            }
+        }
+    }
+
+    public void releaseChunkLoad()
+    {
+        if(worldObj.isRemote)
+        {
+            return;
+        }
+        TouhouAliceCore.instance.chunkloader.releaseTicket(this);
     }
 }
