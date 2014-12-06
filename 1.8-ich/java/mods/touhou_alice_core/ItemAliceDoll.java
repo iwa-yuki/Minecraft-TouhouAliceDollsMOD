@@ -36,14 +36,6 @@ public class ItemAliceDoll extends Item {
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack)
-    {
-        String s = ("" + StatCollector.translateToLocal(this.getUnlocalizedName() + ".name")).trim();
-
-        return s;
-    }
-
-    @Override
     /**
      * アイテムを使ったときに呼ばれる
      */
@@ -217,4 +209,5 @@ public class ItemAliceDoll extends Item {
         return super.getUnlocalizedName() + "."
             + DollRegistry.getDollName(itemstack.getItemDamage());
     }
+    
 }

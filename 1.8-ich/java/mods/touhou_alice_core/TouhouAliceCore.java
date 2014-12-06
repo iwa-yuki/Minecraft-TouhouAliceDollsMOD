@@ -1,8 +1,16 @@
 package mods.touhou_alice_core;
 
+import mods.touhou_alice_core.chunkloader.DollChunkLoader;
 import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.gui.GuiHandler;
+import mods.touhou_alice_core.packet.PacketHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -10,6 +18,8 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -59,6 +69,10 @@ public class TouhouAliceCore
 	
 	/** 人形アイテム */
 	public static Item itemAliceDoll;
+
+	/** チャンクローダー */
+    public DollChunkLoader chunkloader;
+	
     
 
     @EventHandler
@@ -67,6 +81,7 @@ public class TouhouAliceCore
     	LoadConfig(event);
     	registerItems();
     	registerEntities();
+        PacketHandler.init();
     }
     
     @EventHandler
@@ -79,6 +94,27 @@ public class TouhouAliceCore
         	}
         }
     	proxy.registerRenderers();
+    	registerRecipes();
+        // GuiHandlerの登録
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        // チャンクローダーの初期化
+        chunkloader = new DollChunkLoader(this);
+        // 人形の初期化
+        DollRegistry.initialize();
+    }
+    
+	@EventHandler
+    public void load(FMLInitializationEvent event) {
+    	MinecraftForge.EVENT_BUS.register(this);
+    }
+    
+    @SubscribeEvent
+    public void renderFirstPersonHand(RenderHandEvent event) {
+    	Minecraft mc = Minecraft.getMinecraft();
+    	if(mc.func_175606_aa() instanceof EntityAliceDoll)
+    	{
+    		event.setCanceled(true);
+    	}
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -133,5 +169,20 @@ public class TouhouAliceCore
         }
 		
 	}
+
+	/**
+	 * レシピを登録する
+	 */
+    private void registerRecipes() {
+    	
+        GameRegistry.addRecipe(new ItemStack(this.itemDollCore),
+                "# $",
+                "#d$",
+                " # ",
+                '#', Items.redstone,
+                '$', new ItemStack(Items.dye, 1, 4),
+                'd', Items.diamond);
+	}
+
 
 }

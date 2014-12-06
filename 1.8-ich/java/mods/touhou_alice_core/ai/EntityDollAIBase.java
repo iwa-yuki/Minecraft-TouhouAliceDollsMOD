@@ -22,12 +22,12 @@ public class EntityDollAIBase extends EntityAIBase {
 	
 	@Override
 	public void startExecuting() {
-		theDoll.chatMessage(theDoll.getDollName()+" : "+getAIName()+".start", 3);
+		theDoll.chatMessage(theDoll.getName()+" : "+getAIName()+".start", 3);
 	}
 
 	@Override
 	public void resetTask() {
-		theDoll.chatMessage(theDoll.getDollName()+" : "+getAIName()+".reset", 3);
+		theDoll.chatMessage(theDoll.getName()+" : "+getAIName()+".reset", 3);
 	}
     
     public String getAIName() {

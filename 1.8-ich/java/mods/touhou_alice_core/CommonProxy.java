@@ -12,14 +12,6 @@ public class CommonProxy {
     }
 
     /**
-     * 人形モデルの登録
-     */
-    public void registerDollModel(int id)
-    {
-        // 何もしない
-    }
-
-    /**
      * アイテムモデルの登録
      */
     public void registerItemModel(Item item, int meta, String source)

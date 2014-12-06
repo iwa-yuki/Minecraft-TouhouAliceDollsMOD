@@ -4,6 +4,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
 import mods.touhou_alice_core.client.EnumDollRenderType;
 import mods.touhou_alice_core.client.ModelAliceDoll;
@@ -105,6 +106,77 @@ public class DollBase {
 	 */
 	public String getDollName() {
 		return "bare";
+	}
+
+	/**
+	 * 人形の手持ちアイテムを取得する
+	 * @return 手持ちアイテム
+	 */
+	public ItemStack getHeldItem() {
+		return null;
+	}
+
+	/**
+	 * 人形の幅を取得する
+	 * @return
+	 */
+	public float getWidth() {
+		return 0.3F;
+	}
+
+	/**
+	 * 人形の高さを取得する
+	 * @return
+	 */
+	public float getHeight() {
+		return 0.7F;
+	}
+
+	/**
+	 * 人形の体力を取得する
+	 * @return
+	 */
+	public double getHealth() {
+		return 8.0D;
+	}
+
+	/**
+	 * 人形の移動速度を取得する
+	 * @return
+	 */
+	public double getSpeed() {
+		return 025D;
+	}
+
+	/**
+	 * 人形のAIを初期化する
+	 * @param entityAliceDoll 人形Entity
+	 */
+	public void onInitializeAI(EntityAliceDoll entityAliceDoll) {
+
+	}
+
+	/**
+	 * レシピを追加する
+	 */
+	public void addRecipes() {
+		
+	}
+
+	/**
+	 * 人形がふわふわ落下するかどうか
+	 * @return
+	 */
+	public boolean isSlowFall() {
+		return true;
+	}
+
+	/**
+	 * 人形が空中に浮かぶかどうか
+	 * @return
+	 */
+	public boolean isHover() {
+		return false;
 	}
 
 
