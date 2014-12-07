@@ -1,4 +1,4 @@
-package mods.touhou_alice_core.AI;
+package mods.touhou_alice_core.ai;
 
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.World;
