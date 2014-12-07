@@ -1,13 +1,16 @@
 package mods.touhou_alice_core.doll;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
 import mods.touhou_alice_core.client.EnumDollRenderType;
 import mods.touhou_alice_core.client.ModelAliceDoll;
+import mods.touhou_alice_core.ai.*;
 
 public class DollBase {
 
@@ -153,14 +156,26 @@ public class DollBase {
 	 * @param entityAliceDoll 人形Entity
 	 */
 	public void onInitializeAI(EntityAliceDoll entityAliceDoll) {
-
+		entityAliceDoll.addAI(0, new EntityDollAISwimming(entityAliceDoll));
+		entityAliceDoll.addAI(12, new EntityDollAIFollowOwner(entityAliceDoll));
+		entityAliceDoll.addAI(13, new EntityDollAIWander(entityAliceDoll));
+		entityAliceDoll.addAI(14, new EntityDollAIWatchOwner(entityAliceDoll));
+		entityAliceDoll.addAI(15, new EntityDollAIWatchClosest(entityAliceDoll));
+		entityAliceDoll.addAI(16, new EntityDollAILookIdle(entityAliceDoll));
 	}
 
 	/**
 	 * レシピを追加する
 	 */
 	public void addRecipes() {
-		
+        GameRegistry.addRecipe(
+                new ItemStack(TouhouAliceCore.itemAliceDoll, 1,
+                              DollRegistry.getDollID(getDollName())),
+                " W ",
+                "WHW",
+                " W ",
+                'W', Blocks.wool,
+                'H', new ItemStack(TouhouAliceCore.itemDollCore));
 	}
 
 	/**

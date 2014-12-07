@@ -1,6 +1,7 @@
 package mods.touhou_alice_core.client;
 
 import mods.touhou_alice_core.EntityAliceDoll;
+import mods.touhou_alice_core.doll.DollRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -33,13 +34,36 @@ public class LayerAliceDollHeldItem extends LayerHeldItem {
 	protected void doRenderLayer(EntityAliceDoll doll, float p_177141_2_, float p_177141_3_, float p_177141_4_, float p_177141_5_, float p_177141_6_, float p_177141_7_, float p_177141_8_) {
 
 		ItemStack itemstack = doll.getHeldItem();
+        EnumDollRenderType renderType = DollRegistry.getRenderType(doll.getDollID());
 
         if (itemstack != null)
         {
             GlStateManager.pushMatrix();
 
             (this.renderer.getCurrentMainModel()).postRenderHiddenArm(0.0625F);
-            GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
+            if(renderType == EnumDollRenderType.BIPED)
+            {
+            	GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
+            }
+            else if(renderType == EnumDollRenderType.DOLL)
+            {
+            	GlStateManager.translate(-0.0625F, 0.1F, -0.03125F);
+            	GlStateManager.scale(0.4F, 0.4F, 0.4F);
+            }
+            else if(renderType == EnumDollRenderType.TALL)
+            {
+            	GlStateManager.translate(-0.0625F, 0.25F, 0F);
+            	GlStateManager.scale(0.6F, 0.6F, 0.6F);
+            }
+            else if(renderType == EnumDollRenderType.GRANDE)
+            {
+            	GlStateManager.translate(-0.0625F, 0.3F, 0F);
+            	GlStateManager.scale(0.75F, 0.75F, 0.75F);
+            }
+            else if(renderType == EnumDollRenderType.VENTI)
+            {
+            	GlStateManager.translate(-0.0625F, 0.7F, 0.0F);
+            }
 
             Item item = itemstack.getItem();
             Minecraft minecraft = Minecraft.getMinecraft();

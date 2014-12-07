@@ -1,5 +1,8 @@
 package mods.touhou_alice_core;
 
+import java.util.List;
+import java.util.Random;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +22,6 @@ public class ItemDollCore extends Item {
 		this.maxStackSize = 16;
         this.setMaxDamage(0);
 		setCreativeTab(CreativeTabs.tabTools);
-        // setUnlocalizedName(TouhouAliceCore.MODID + ":dollcore");
         setUnlocalizedName("dollcore");
         
         isUsing = false;
@@ -80,8 +82,23 @@ public class ItemDollCore extends Item {
 	 * @param entityIn 召喚元のプレイヤー
 	 */
 	private void onCharged(World worldIn, Entity entityIn) {
-		// TODO Auto-generated method stub
-		
+        List<EntityAliceDoll> dolls = worldIn.func_175647_a(
+                EntityAliceDoll.class, entityIn.getEntityBoundingBox().expand(
+                    128.0D, 128.0D, 128.0D),
+                new DollSelector((EntityPlayer)entityIn));
+            int size = dolls.size();
+            if(size != 0)
+            {
+                Random rand = new Random();
+                int index = rand.nextInt(size);
+
+                EntityAliceDoll d = dolls.get(index);
+                
+                d.teleportToEntity(d.getOwnerEntity(), 2.0D);
+                entityIn.mountEntity(null);
+                d.setRideonMode();
+            }
+
 	}
 	
 	

@@ -20,7 +20,7 @@ public class EntityDollAIWander extends EntityDollAIBase
     public EntityDollAIWander(EntityAliceDoll doll)
     {
         super(doll);
-        this.speed = 1.0F;
+        this.speed = 0.01F;
         this.setMutexBits(1);
     }
 

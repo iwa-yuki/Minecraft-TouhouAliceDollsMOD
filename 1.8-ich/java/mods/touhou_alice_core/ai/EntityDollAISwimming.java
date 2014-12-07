@@ -25,7 +25,7 @@ public class EntityDollAISwimming extends EntityDollAIBase
         {
             return false;
         }
-        if(theDoll.isInWater() || this.theDoll.handleLavaMovement())
+        if(theDoll.isInWater() || this.theDoll.func_180799_ab())
         {
             return true;
         }

@@ -16,7 +16,7 @@ import net.minecraft.util.MathHelper;
 public class EntityDollAIFollowOwner extends EntityDollAIBase
 {
     private EntityPlayer theOwner;
-    private float speed;
+    private double speed;
     private float maxDist;
     private float minDist;
     private PathNavigate pathfinder;
@@ -26,8 +26,8 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
     public EntityDollAIFollowOwner(EntityAliceDoll doll)
     {
         super(doll);
-        this.speed = 1.0F;
-        this.minDist = 4.0f;
+        this.speed = 0.01D;
+        this.minDist = 5.0f;
         this.maxDist = 2.5f;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
@@ -96,7 +96,7 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
     {
         this.theOwner = null;
         this.pathfinder.clearPathEntity();
-        ((PathNavigateGround)this.theDoll.getNavigator()).func_179690_a(false);
+        ((PathNavigateGround)this.theDoll.getNavigator()).func_179690_a(this.avoidsWater);
         
         super.resetTask();
     }
@@ -118,13 +118,16 @@ public class EntityDollAIFollowOwner extends EntityDollAIBase
                 {
                     int var1 = MathHelper.floor_double(this.theOwner.posX)-2;
                     int var2 = MathHelper.floor_double(this.theOwner.posZ)-2;
-                    int var3 = MathHelper.floor_double(this.theOwner.getBoundingBox().minY);
+                    int var3 = MathHelper.floor_double(this.theOwner.getEntityBoundingBox().minY);
 
                     for (int var4 = 0; var4 <= 4; ++var4)
                     {
                         for (int var5 = 0; var5 <= 4; ++var5)
                         {
-                        	if ((World.doesBlockHaveSolidTopSurface(this.theWorld, new BlockPos(var1 + var4, var3 - 1, var2 + var5))) && (!this.theWorld.getBlockState(new BlockPos(var1 + var4, var3, var2 + var5)).getBlock().isNormalCube()) && (!this.theWorld.getBlockState(new BlockPos(var1 + var4, var3 + 1, var2 + var5)).getBlock().isNormalCube()))
+                        	if ((var4 < 1 || var5 < 1 || var4 > 3 || var5 > 3) && 
+                        			(World.doesBlockHaveSolidTopSurface(this.theWorld, new BlockPos(var1 + var4, var3 - 1, var2 + var5))) && 
+                        			(!this.theWorld.getBlockState(new BlockPos(var1 + var4, var3, var2 + var5)).getBlock().isFullCube()) && 
+                        			(!this.theWorld.getBlockState(new BlockPos(var1 + var4, var3 + 1, var2 + var5)).getBlock().isFullCube()))
                             {
                                 this.theDoll.setLocationAndAngles((double)((float)(var1 + var4) + 0.5F), (double)var3, (double)((float)(var2 + var5) + 0.5F), this.theDoll.rotationYaw, this.theDoll.rotationPitch);
                                 this.pathfinder.clearPathEntity();

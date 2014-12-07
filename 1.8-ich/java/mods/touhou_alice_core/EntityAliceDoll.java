@@ -73,6 +73,21 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
         initDataWatcher();
     }
     
+    @Override
+    protected void applyEntityAttributes()
+    {
+        super.applyEntityAttributes();
+    	
+    	// 人形の体力を設定
+        getEntityAttribute(SharedMonsterAttributes.maxHealth)
+        	.setBaseValue(DollRegistry.getHealth(localDollID));
+        setHealth(this.getMaxHealth());
+        
+        // 人形の移動速度を設定
+        getEntityAttribute(SharedMonsterAttributes.movementSpeed)
+        	.setBaseValue(DollRegistry.getSpeed(localDollID));
+    }
+    
     /** 人形IDが変更されたときに呼ばれる */
     private void onChangeDollID() {
     	
@@ -103,15 +118,6 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
     	
     	// 人形の大きさを設定
     	setSize(DollRegistry.getWidth(localDollID), DollRegistry.getHeight(localDollID));
-    	
-    	// 人形の体力を設定
-        getEntityAttribute(SharedMonsterAttributes.maxHealth)
-        	.setBaseValue(DollRegistry.getHealth(localDollID));
-        setHealth(this.getMaxHealth());
-        
-        // 人形の移動速度を設定
-        getEntityAttribute(SharedMonsterAttributes.movementSpeed)
-        	.setBaseValue(DollRegistry.getSpeed(localDollID));
         
         // 人形の落下動作を設定
         isSlowFall = DollRegistry.isSlowFall(localDollID);
@@ -121,7 +127,11 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
         clearAI();
         DollRegistry.onInitializeAI(localDollID, this);
         
-        FMLLog.info("%s : Doll(%s[%d]) is initialized.",
+        // 座標ずれ対策
+        posX = Math.floor(posX) + 0.5D;
+        posZ = Math.floor(posZ) + 0.5D;
+        
+        FMLLog.info("%s : Initialized Doll(%s) with entity id.",
                 (worldObj.isRemote?"R":"S"),
                 DollRegistry.getDollName(localDollID),
                 getEntityId());
@@ -396,6 +406,10 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
                 {
                     return false;
                 }
+            }
+            else if(par1DamageSource.getDamageType().equalsIgnoreCase("inWall"))
+            {
+            	return false;
             }
         }
         
@@ -885,6 +899,28 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
         double dy = r.nextGaussian() * 0.02D;
         double dz = r.nextGaussian() * 0.02D;
         this.worldObj.spawnParticle(type, x, y, z, dx, dy, dz);
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // テレポート
+
+    /** Entityの近くへテレポート */
+    public void teleportToEntity(Entity entity, double r)
+    {
+        teleportToXYZ(entity.posX, entity.posY, entity.posZ, r);
+    }
+
+    /** 指定座標の近くへテレポート */
+    public void teleportToXYZ(double x, double y, double z, double r)
+    {
+        double d = Math.sqrt((posX-x)*(posX-x) + (posY-y)*(posY-y) + (posZ-z)*(posZ-z));
+        
+        double newX = x + (posX - x) / d * r;
+        double newY = y + (posY - y) / d * r;
+        double newZ = z + (posZ - z) / d * r;
+
+        this.setPosition(newX, newY, newZ);
+        this.playSound("mob.endermen.portal", 0.5F, 1.0F);
     }
 
     ////////////////////////////////////////////////////////////////////////////

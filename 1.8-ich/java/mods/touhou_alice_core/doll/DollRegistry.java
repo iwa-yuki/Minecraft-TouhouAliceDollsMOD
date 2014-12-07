@@ -2,6 +2,7 @@ package mods.touhou_alice_core.doll;
 
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
+import mods.touhou_alice_core.client.EnumDollRenderType;
 import mods.touhou_alice_core.client.ModelAliceDoll;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -71,6 +72,15 @@ public class DollRegistry {
 		
 		return dollList[0].getArmorTexturePath(stack, slot, type);
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public static EnumDollRenderType getRenderType(int id) {
+		if(isExist(id)) {
+			return dollList[id].getRenderType();
+		}
+		return dollList[0].getRenderType();
+	}
+	
 	public static ModelAliceDoll getModelInstance(int id, float expand) {
 
 		if(isExist(id)) {
@@ -155,5 +165,17 @@ public class DollRegistry {
 			return dollList[id].isHover();
 		}
 		return dollList[0].isHover();
+	}
+
+	public static int getDollID(String dollName) {
+    	for(int id = 0; id < getDollListLength(); ++id)
+    	{
+    		if((dollList[id] != null) && dollList[id].getDollName().equalsIgnoreCase(dollName))
+    		{
+    			return id;
+    		}
+    	}
+    	
+    	return 0;
 	}
 }
