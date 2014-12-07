@@ -30,7 +30,7 @@ public class DollBase {
 	public String getArmorTexturePath(ItemStack stack, int slot, String type) {
 		
       ItemArmor item = (ItemArmor)stack.getItem();
-      String s1 = String.format(TouhouAliceCore.MODID + ":textures/dolls/armor/short/%s_layer_%d%s.png",
+      String s1 = String.format(TouhouAliceCore.MODID + ":textures/dolls/armor/doll/%s_layer_%d%s.png",
               item.getArmorMaterial().func_179242_c(), (slot == 2 ? 2 : 1), type == null ? "" : String.format("_%s", type));
 
       return s1;
