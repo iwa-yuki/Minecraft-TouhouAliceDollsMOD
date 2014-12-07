@@ -30,7 +30,28 @@ public class DollRegistry {
     		}
     	}
 	}
+	
+    /**
+     * 人形を追加する
+     * @param id 人形のID
+     * @param doll 追加する人形
+     * @return 追加に成功したかどうか
+     */
+    static public boolean addDoll(int id, DollBase doll)
+    {
+        if(id < 0 || id >= getDollListLength())
+        {
+            return false;
+        }
+        if(dollList[id] != null)
+        {
+            return false;
+        }
+        dollList[id] = doll;
 
+        return true;
+    }
+    
 	/**
 	 * 人形が登録されているかどうか
 	 * @param id 人形ID
