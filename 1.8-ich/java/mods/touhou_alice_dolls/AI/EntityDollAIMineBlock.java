@@ -6,6 +6,7 @@ import net.minecraft.block.Block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
 import mods.touhou_alice_core.ai.EntityDollAIBase;
@@ -92,9 +93,8 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
                         continue;
                     }
 
-                    Block b = theWorld.getBlock(dollposX+dx,
-                                            dollposY+dy,
-                                            dollposZ+dz);
+                    Block b = theWorld.getBlockState(new BlockPos(dollposX+dx,
+                                            dollposY+dy, dollposZ+dz)).getBlock();
                     if(b==null)
                     {
                         continue;
@@ -155,7 +155,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
                                 kk= k;
                                 isMining = true;
                             }
-                            else if(theWorld.isAirBlock(dollposX+mineX+i, dollposY+mineY+j, dollposZ+mineZ+k))
+                            else if(theWorld.isAirBlock(new BlockPos(dollposX+mineX+i, dollposY+mineY+j, dollposZ+mineZ+k)))
                             {
                                 //ターゲットにもっとも近い移動可能ブロック
                                 ii=i;
@@ -205,8 +205,8 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
         {
             return false;
         }
-        if(this.theWorld.isAirBlock(
-               mineX, mineY, mineZ))
+        if(this.theWorld.isAirBlock(new BlockPos(
+               mineX, mineY, mineZ)))
         {
             return false;
         }
@@ -218,7 +218,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
     {
     	super.startExecuting();
     	
-        Block b = theWorld.getBlock(mineX, mineY, mineZ);
+        Block b = theWorld.getBlockState(new BlockPos(mineX, mineY, mineZ)).getBlock();
         if(b == null)
         {
             return;
@@ -226,7 +226,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
         
         int blockStrength = MathHelper.floor_double(
             20.0*b.getBlockHardness(
-                theWorld, mineX, mineY, mineZ)/mineSpeed);
+                theWorld, new BlockPos(mineX, mineY, mineZ))/mineSpeed);
         this.counter = blockStrength < 0 ? 0 : blockStrength;
         this.pathfinder.tryMoveToXYZ(
             (double)(mineX) + 0.5D,
@@ -257,20 +257,20 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
         
         if (this.counter == 0)
         {
-            Block b = theWorld.getBlock(mineX, mineY, mineZ);
+            Block b = theWorld.getBlockState(new BlockPos(mineX, mineY, mineZ)).getBlock();
             if(b != null)
             {
-                theWorld.func_147480_a(mineX, mineY, mineZ, true);
+                theWorld.destroyBlock(new BlockPos(mineX, mineY, mineZ), true);
             }
         }
         if(this.counter > 0 && this.counter%4 == 0)
         {
-            Block b = theWorld.getBlock(
-                    mineX, mineY, mineZ);
+            Block b = theWorld.getBlockState(new BlockPos(
+                    mineX, mineY, mineZ)).getBlock();
             if(b != null)
             {
                 SoundType stepsound = b.stepSound;
-                theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getPitch() * 0.5f);
+                theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getFrequency() * 0.5f);
             }
         }
         if(!theDoll.isSwingInProgress)
@@ -312,28 +312,30 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
 	private boolean canDigBlock(int i, int j, int k)
 	{
         //空気は掘れない
-		if(theWorld.isAirBlock(i, j, k))
+		if(theWorld.isAirBlock(new BlockPos(i, j, k)))
 		{
 			return false;
 		}
 		
-		Block b = theWorld.getBlock(i, j, k);
+		Block b = theWorld.getBlockState(new BlockPos(i, j, k)).getBlock();
 		if(b!=null)
 		{
             //黒曜石より硬いものは掘れない
-			if(b.getBlockHardness(theWorld, i, j, k) < 0f || b.getBlockHardness(theWorld, i, j, k) > Blocks.obsidian.getBlockHardness(theWorld, 0, 0, 0))
+			if(b.getBlockHardness(theWorld, new BlockPos(i, j, k)) < 0f ||
+					b.getBlockHardness(theWorld, new BlockPos(i, j, k)) > Blocks.obsidian.getBlockHardness(theWorld, null))
 			{
 				return false;
 			}
             //上に砂や砂利があると掘れない(生き埋め防止)
-			if(theWorld.getBlock(i, j + 1, k) == Blocks.sand || theWorld.getBlock(i, j + 1, k) == Blocks.gravel)
+			if(theWorld.getBlockState(new BlockPos(i, j + 1, k)).getBlock() == Blocks.sand ||
+					theWorld.getBlockState(new BlockPos(i, j + 1, k)).getBlock() == Blocks.gravel)
 			{
 				return false;
 			}
 		}
 		
 		int u=-1;
-		while(theWorld.isAirBlock(i, j+u, k))
+		while(theWorld.isAirBlock(new BlockPos(i, j+u, k)))
 		{
             //掘ったら奈落
 			if(j+u<=0)
@@ -341,7 +343,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
 				return false;
 			}
             //掘ったらマグマダイブ
-			Block bu = theWorld.getBlock(i, j+u-1, k);
+			Block bu = theWorld.getBlockState(new BlockPos(i, j+u-1, k)).getBlock();
 			if(bu.getMaterial() == Material.lava)
 			{
 				return false;
@@ -358,7 +360,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
 				{
 					if((ii>0?ii:-ii)+(jj>0?jj:-jj)+(kk>0?kk:-kk)<=1)
 					{
-						Block bu = theWorld.getBlock(i+ii, j+jj, k+kk);
+						Block bu = theWorld.getBlockState(new BlockPos(i+ii, j+jj, k+kk)).getBlock();
 						if(bu.getMaterial() == Material.lava)
 						{
 							return false;

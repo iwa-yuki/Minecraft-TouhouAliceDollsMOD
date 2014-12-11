@@ -2,9 +2,12 @@ package mods.touhou_alice_dolls.AI;
 
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -50,11 +53,11 @@ public class EntityDollAIPlantTree extends EntityDollAIBase
         int targetY = dollposY;
         int targetZ = dollposZ;
 
-        while(!theWorld.isAirBlock(targetX, targetY, targetZ))
+        while(!theWorld.isAirBlock(new BlockPos(targetX, targetY, targetZ)))
         {
             ++targetY;
         }
-        while(theWorld.isAirBlock(targetX, targetY, targetZ))
+        while(theWorld.isAirBlock(new BlockPos(targetX, targetY, targetZ)))
         {
             --targetY;
         }
@@ -63,36 +66,36 @@ public class EntityDollAIPlantTree extends EntityDollAIBase
         {
             return false;
         }
-        if(theWorld.getBlock(targetX, targetY, targetZ)
-           != Blocks.dirt &&
-           theWorld.getBlock(targetX, targetY, targetZ)
-           != Blocks.grass)
+        
+        BlockPos targetPos = new BlockPos(targetX, targetY, targetZ);
+        if(theWorld.getBlockState(targetPos).getBlock() != Blocks.dirt &&
+           theWorld.getBlockState(targetPos).getBlock() != Blocks.grass)
         {
             return false;
         }
-        if(theWorld.getBlock(targetX+1, targetY, targetZ)
+        if(theWorld.getBlockState(targetPos.offset(EnumFacing.EAST)).getBlock()
            != Blocks.glowstone)
         {
             return false;
         }
-        if(theWorld.getBlock(targetX-1, targetY, targetZ)
+        if(theWorld.getBlockState(targetPos.offset(EnumFacing.WEST)).getBlock()
            != Blocks.glowstone)
         {
             return false;
         }
-        if(theWorld.getBlock(targetX, targetY, targetZ+1)
+        if(theWorld.getBlockState(targetPos.offset(EnumFacing.NORTH)).getBlock()
            != Blocks.glowstone)
         {
             return false;
         }
-        if(theWorld.getBlock(targetX, targetY, targetZ-1)
+        if(theWorld.getBlockState(targetPos.offset(EnumFacing.SOUTH)).getBlock()
            != Blocks.glowstone)
         {
             return false;
         }
         
         theDoll.decrStackSize(0, 1);
-        theWorld.setBlock(targetX, targetY+1, targetZ, Block.getBlockFromItem(subItem.getItem()), subItem.getItemDamage(), 3);
+        theWorld.setBlockState(new BlockPos(targetX, targetY+1, targetZ), new BlockState(Block.getBlockFromItem(subItem.getItem()), subItem.getItemDamage()));
 
         return false;
     }

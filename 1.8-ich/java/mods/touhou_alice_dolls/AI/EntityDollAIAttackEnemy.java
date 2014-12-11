@@ -93,11 +93,7 @@ public class EntityDollAIAttackEnemy extends EntityDollAIBase
             if(theDoll.isFollowMode())
             {
                 Entity tt = null;
-                if(e instanceof EntityCreature)
-                {
-                    tt = ((EntityCreature)e).getEntityToAttack();
-                }
-                else if(e instanceof EntityLiving)
+                if(e instanceof EntityLiving)
                 {
                     tt = ((EntityLiving)e).getAttackTarget();
                 }

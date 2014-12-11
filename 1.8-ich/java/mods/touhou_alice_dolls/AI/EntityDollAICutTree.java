@@ -5,9 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.Block.SoundType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
-
 import mods.touhou_alice_core.ai.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
@@ -69,7 +70,7 @@ public class EntityDollAICutTree extends EntityDollAIBase
                 {
                     continue;
                 }
-                Block b = theWorld.getBlock(dollposX+dx, dollposY+dy, dollposZ+dz);
+                Block b = theWorld.getBlockState(new BlockPos(dollposX+dx, dollposY+dy, dollposZ+dz)).getBlock();
                 if(b==null)
                 {
                     continue;
@@ -86,7 +87,7 @@ public class EntityDollAICutTree extends EntityDollAIBase
                         while(dollposY+dy > 0)
                         {
                             //根元のブロックを見つける
-                            Block cb = theWorld.getBlock(dollposX+dx, dollposY+dy-1, dollposZ+dz);
+                            Block cb = theWorld.getBlockState(new BlockPos(dollposX+dx, dollposY+dy-1, dollposZ+dz)).getBlock();
                             if(cb != b)
                             {
                                 break;
@@ -97,18 +98,20 @@ public class EntityDollAICutTree extends EntityDollAIBase
                         int bcount = 0;
                         while(dollposY+dy < theWorld.getHeight())
                         {
+                            BlockPos cbPos = new BlockPos(dollposX+dx, dollposY+dy, dollposZ+dz);
+                            
                             //梢のブロックまで隣接する葉ブロックの数を数える
-                            Block cb = theWorld.getBlock(dollposX+dx, dollposY+dy, dollposZ+dz);
+                            Block cb = theWorld.getBlockState(cbPos).getBlock();
                             if(cb != b)
                             {
                                 break;
                             }
                             
                             Block[] nb = new Block[4];
-                            nb[0] = theWorld.getBlock(dollposX+dx+1, dollposY+dy, dollposZ+dz);
-                            nb[1] = theWorld.getBlock(dollposX+dx-1, dollposY+dy, dollposZ+dz);
-                            nb[2] = theWorld.getBlock(dollposX+dx, dollposY+dy, dollposZ+dz+1);
-                            nb[3] = theWorld.getBlock(dollposX+dx, dollposY+dy, dollposZ+dz-1);
+                            nb[0] = theWorld.getBlockState(cbPos.offset(EnumFacing.EAST)).getBlock();
+                            nb[1] = theWorld.getBlockState(cbPos.offset(EnumFacing.WEST)).getBlock();
+                            nb[2] = theWorld.getBlockState(cbPos.offset(EnumFacing.NORTH)).getBlock();
+                            nb[3] = theWorld.getBlockState(cbPos.offset(EnumFacing.SOUTH)).getBlock();
                             for(int i=0; i<4; ++i)
                             {
                                 Block lb = nb[i];
@@ -224,9 +227,7 @@ public class EntityDollAICutTree extends EntityDollAIBase
                     {
                         continue;
                     }
-                    if(theWorld.getBlock(targetX+dx,
-                                           targetY,
-                                           targetZ+dz) == logBlock)
+                    if(theWorld.getBlockState(new BlockPos(targetX+dx, targetY, targetZ+dz)).getBlock() == logBlock)
                     {
                         cutX = targetX+dx;
                         cutY = targetY;
@@ -249,7 +250,7 @@ public class EntityDollAICutTree extends EntityDollAIBase
                 cutY = targetY;
                 cutZ = targetZ;
                 targetY--;
-                if(theWorld.getBlock(targetX, targetY, targetZ) == logBlock)
+                if(theWorld.getBlockState(new BlockPos(targetX, targetY, targetZ)).getBlock() == logBlock)
                 {
                     isCutting = true;
                 }
@@ -261,28 +262,28 @@ public class EntityDollAICutTree extends EntityDollAIBase
                 }
             }
 
-            Block b = theWorld.getBlock(cutX, cutY, cutZ);
-            blockStrength = b == null ? 0 : MathHelper.floor_double(1.0 + 30.0*b.getBlockHardness(theWorld, cutX, cutY, cutZ)/cutSpeed);
+            Block b = theWorld.getBlockState(new BlockPos(cutX, cutY, cutZ)).getBlock();
+            blockStrength = b == null ? 0 : MathHelper.floor_double(1.0 + 30.0*b.getBlockHardness(theWorld, new BlockPos(cutX, cutY, cutZ))/cutSpeed);
             blockStrength = blockStrength < 0 ? 0 : blockStrength;
         }
         //System.out.println("counter="+counter+", blockStrength="+blockStrength);
         if(counter >= blockStrength)
         {
-            Block b = theWorld.getBlock(cutX, cutY, cutZ);
+            Block b = theWorld.getBlockState(new BlockPos(cutX, cutY, cutZ)).getBlock();
             if(b != null)
             {
-                theWorld.func_147480_a(cutX, cutY, cutZ, true);
+                theWorld.destroyBlock(new BlockPos(cutX, cutY, cutZ), true);
             }
             counter = 0;
             return;
         }
         if(counter%4 == 0)
         {
-            Block b = theWorld.getBlock(targetX, targetY, targetZ);
+            Block b = theWorld.getBlockState(new BlockPos(targetX, targetY, targetZ)).getBlock();
             if(b != null)
             {
                 SoundType stepsound = b.stepSound;
-                theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getPitch() * 0.5f);
+                theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getFrequency() * 0.5f);
             }
         }
         if(!theDoll.isSwingInProgress)
