@@ -47,7 +47,7 @@ public class TouhouAliceDolls
     /** MODの名前 */
     public static final String MODNAME = "Alice's Dolls MOD";
     /** MODのバージョン */
-    public static final String VERSION = "1.7.x-kog";
+    public static final String VERSION = "1.7.x-kog2";
     /** MODの依存関係 */
     public static final String DEPENDENCIES = "required-after:touhou_alice_core";
     

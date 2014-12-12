@@ -94,6 +94,8 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
         
         int thirdPersonView = mc.gameSettings.thirdPersonView;
         mc.gameSettings.thirdPersonView = 0;
+        boolean hideGUI = mc.gameSettings.hideGUI;
+        mc.gameSettings.hideGUI = true;
         
         PotionEffect dollNightVisionEffect = null;
         PotionEffect dollBlindnessEffect = null;
@@ -170,6 +172,7 @@ public class MessageAyaShotHandler implements IMessageHandler<MessageAyaShot, IM
         	doll.addPotionEffect(dollNightVisionEffect);
         }
         
+        mc.gameSettings.hideGUI = hideGUI;
         mc.gameSettings.thirdPersonView = thirdPersonView;
 
         mc.renderViewEntity.rotationYaw = rotationYaw;
