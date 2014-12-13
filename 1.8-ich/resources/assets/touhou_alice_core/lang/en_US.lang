@@ -1,13 +1,44 @@
-
 language.name=English
 language.region=US
 language.code=en_US
 
 item.dollcore.name=DollCore
 item.alicedoll.name=Alice's Doll
+
 item.alicedoll.bare.name=Bare Doll
 item.alicedoll.bareshort.name=Bare Doll MkII
 item.alicedoll.baretall.name=Bare Doll MkIII
 item.alicedoll.baregrande.name=Bare Doll MkIV
 
+item.alicedoll.shanghai.name=Shanghai Doll
+item.alicedoll.horai.name=Horai Doll
+item.alicedoll.ooedo.name=Ooedo Doll
+item.alicedoll.russia.name=Russia Doll
+item.alicedoll.germany.name=Germany Doll
+item.alicedoll.london.name=London Doll
+item.alicedoll.grandguignol.name=Grand-Guignol
+
+item.alicedoll.reimu.name=Reimu Doll
+item.alicedoll.marisa.name=Marisa Doll
+item.alicedoll.yuuka.name=Yuuka Doll
+item.alicedoll.goliath.name=Goriath Doll
+item.alicedoll.aya.name= Shameimaru Doll
+
 entity.alicedoll.bare.name=Bare Doll
+entity.alicedoll.bareshort.name=Bare Doll MkII
+entity.alicedoll.baretall.name=Bare Doll MkIII
+entity.alicedoll.baregrande.name=Bare Doll MkIV
+
+entity.alicedoll.shanghai.name=Shanghai Doll
+entity.alicedoll.horai.name=Horai Doll
+entity.alicedoll.ooedo.name=Ooedo Doll
+entity.alicedoll.russia.name=Russia Doll
+entity.alicedoll.germany.name=Germany Doll
+entity.alicedoll.london.name=London Doll
+entity.alicedoll.grandguignol.name=Grand-Gugnol
+
+entity.alicedoll.reimu.name=Reimu Doll
+entity.alicedoll.marisa.name=Marisa Doll
+entity.alicedoll.yuuka.name=Yuuka Doll
+entity.alicedoll.goliath.name=Goriath Doll
+entity.alicedoll.aya.name= Shameimaru Doll

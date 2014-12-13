@@ -1,7 +1,7 @@
 package mods.touhou_alice_core.client;
 
 import mods.touhou_alice_core.EntityAliceDoll;
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelZombie;

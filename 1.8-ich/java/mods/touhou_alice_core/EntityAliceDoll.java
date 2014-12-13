@@ -6,8 +6,8 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
-import mods.touhou_alice_core.ai.EntityDollAIBase;
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import mods.touhou_alice_core.gui.GuiAliceDollInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPumpkin;
@@ -931,7 +931,7 @@ public class EntityAliceDoll extends EntityLiving implements IInventory, ISidedI
     /** インベントリのスロット数を取得する */
 	@Override
 	public int getSizeInventory() {
-		return 9;
+		return DollRegistry.getSizeInventory(localDollID);
 	}
 
 	/** 指定したスロットのアイテムを取得する

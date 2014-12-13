@@ -1,13 +1,44 @@
-
 language.name=Japanese
 language.region=JP
 language.code=ja_JP
 
 item.dollcore.name=ドールコア
 item.alicedoll.name=アリスの人形
+
 item.alicedoll.bare.name=素体人形
 item.alicedoll.bareshort.name=素体人形MkII
 item.alicedoll.baretall.name=素体人形MkIII
 item.alicedoll.baregrande.name=素体人形MkIV
 
+item.alicedoll.shanghai.name=上海人形
+item.alicedoll.horai.name=蓬莱人形
+item.alicedoll.ooedo.name=大江戸人形
+item.alicedoll.russia.name=露西亜人形
+item.alicedoll.germany.name=独逸人形
+item.alicedoll.london.name=倫敦人形
+item.alicedoll.grandguignol.name=グランギニョル
+
+item.alicedoll.reimu.name=霊夢人形
+item.alicedoll.marisa.name=魔理沙人形
+item.alicedoll.yuuka.name=幽香人形
+item.alicedoll.goliath.name=ゴリアテ人形
+item.alicedoll.aya.name= 射命丸人形
+
 entity.alicedoll.bare.name=素体人形
+entity.alicedoll.bareshort.name=素体人形MkII
+entity.alicedoll.baretall.name=素体人形MkIII
+entity.alicedoll.baregrande.name=素体人形MkIV
+
+entity.alicedoll.shanghai.name=上海人形
+entity.alicedoll.horai.name=蓬莱人形
+entity.alicedoll.ooedo.name=大江戸人形
+entity.alicedoll.russia.name=露西亜人形
+entity.alicedoll.germany.name=独逸人形
+entity.alicedoll.london.name=倫敦人形
+entity.alicedoll.grandguignol.name=グランギニョル
+
+entity.alicedoll.reimu.name=霊夢人形
+entity.alicedoll.marisa.name=魔理沙人形
+entity.alicedoll.yuuka.name=幽香人形
+entity.alicedoll.goliath.name=ゴリアテ人形
+entity.alicedoll.aya.name= 射命丸人形

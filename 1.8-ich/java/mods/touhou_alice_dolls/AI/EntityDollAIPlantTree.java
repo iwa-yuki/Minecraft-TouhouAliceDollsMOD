@@ -3,6 +3,7 @@ package mods.touhou_alice_dolls.AI;
 import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -95,7 +96,8 @@ public class EntityDollAIPlantTree extends EntityDollAIBase
         }
         
         theDoll.decrStackSize(0, 1);
-        theWorld.setBlockState(new BlockPos(targetX, targetY+1, targetZ), new BlockState(Block.getBlockFromItem(subItem.getItem()), subItem.getItemDamage()));
+        IBlockState iblockstate = Block.getBlockFromItem(subItem.getItem()).getStateFromMeta(subItem.getMetadata());
+        theWorld.setBlockState(new BlockPos(targetX, targetY+1, targetZ), iblockstate);
 
         return false;
     }

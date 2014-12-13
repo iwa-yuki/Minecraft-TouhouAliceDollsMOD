@@ -10,7 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import mods.touhou_alice_core.doll.*;
+import mods.touhou_alice_core.dolls.*;
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
 import mods.touhou_alice_dolls.AI.*;
@@ -42,7 +42,7 @@ public class DollGrandGuignol extends DollBase
     @Override
     public String getMainTexturePath()
     {
-        return "textures/dolls/grandguignol.png";
+        return "touhou_alice_core:textures/dolls/grandguignol.png";
     }
 
     /**

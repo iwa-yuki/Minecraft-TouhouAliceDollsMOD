@@ -2,7 +2,7 @@ package mods.touhou_alice_core;
 
 import java.util.List;
 
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;

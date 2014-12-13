@@ -1,4 +1,4 @@
-package mods.touhou_alice_core.ai;
+package mods.touhou_alice_core.AI;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;

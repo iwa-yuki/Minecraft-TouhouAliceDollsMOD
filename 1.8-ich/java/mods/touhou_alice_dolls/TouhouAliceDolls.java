@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import mods.touhou_alice_core.TouhouAliceCore;
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import mods.touhou_alice_dolls.dolls.*;
 import mods.touhou_alice_dolls.AI.*;
 
@@ -40,7 +40,7 @@ public class TouhouAliceDolls
     /** MODの名前 */
     public static final String MODNAME = "Alice's Dolls MOD";
     /** MODのバージョン */
-    public static final String VERSION = "1.7.x-kog";
+    public static final String VERSION = "1.8-ich";
     /** MODの依存関係 */
     public static final String DEPENDENCIES = "required-after:touhou_alice_core";
     

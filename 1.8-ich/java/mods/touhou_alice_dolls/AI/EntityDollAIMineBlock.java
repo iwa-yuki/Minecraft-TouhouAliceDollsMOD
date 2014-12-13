@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -36,7 +36,7 @@ public class EntityDollAIMineBlock extends EntityDollAIBase
     public EntityDollAIMineBlock(EntityAliceDoll doll)
     {
         super(doll);
-        this.speed = 1.0F;
+        this.speed = 0.01F;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
         counter = 0;

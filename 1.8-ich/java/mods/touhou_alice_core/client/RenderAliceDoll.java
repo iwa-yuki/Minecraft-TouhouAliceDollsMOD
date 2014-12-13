@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.model.ModelZombieVillager;

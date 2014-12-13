@@ -10,8 +10,7 @@ import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityLiving;
-
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;

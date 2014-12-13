@@ -9,7 +9,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;

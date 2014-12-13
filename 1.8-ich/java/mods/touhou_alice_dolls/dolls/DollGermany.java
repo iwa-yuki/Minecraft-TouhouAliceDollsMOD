@@ -11,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import mods.touhou_alice_core.doll.*;
+import mods.touhou_alice_core.dolls.*;
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
 import mods.touhou_alice_dolls.AI.*;
@@ -43,7 +43,7 @@ public class DollGermany extends DollBase
     @Override
     public String getMainTexturePath()
     {
-        return "textures/dolls/germany.png";
+        return "touhou_alice_core:textures/dolls/germany.png";
     }
 
     /**

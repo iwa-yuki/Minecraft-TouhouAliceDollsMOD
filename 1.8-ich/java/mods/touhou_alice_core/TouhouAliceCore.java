@@ -1,7 +1,7 @@
 package mods.touhou_alice_core;
 
 import mods.touhou_alice_core.chunkloader.DollChunkLoader;
-import mods.touhou_alice_core.doll.DollRegistry;
+import mods.touhou_alice_core.dolls.DollRegistry;
 import mods.touhou_alice_core.gui.GuiHandler;
 import mods.touhou_alice_core.packet.PacketHandler;
 import net.minecraft.client.Minecraft;

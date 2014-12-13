@@ -3,17 +3,19 @@ package mods.touhou_alice_dolls.AI;
 import net.minecraft.world.World;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -57,11 +59,11 @@ public class EntityDollAITorcher extends EntityDollAIBase
         int targetY = dollposY;
         int targetZ = dollposZ;
 
-        while(!theWorld.isAirBlock(targetX, targetY, targetZ))
+        while(!theWorld.isAirBlock(new BlockPos(targetX, targetY, targetZ)))
         {
             ++targetY;
         }
-        while(theWorld.isAirBlock(targetX, targetY, targetZ))
+        while(theWorld.isAirBlock(new BlockPos(targetX, targetY, targetZ)))
         {
             --targetY;
         }
@@ -77,11 +79,12 @@ public class EntityDollAITorcher extends EntityDollAIBase
             return false;
         }
         
-        Block b = theWorld.getBlock(targetX, targetY-1, targetZ);
+        Block b = theWorld.getBlockState(new BlockPos(targetX, targetY-1, targetZ)).getBlock();
         if(b != null && b.isOpaqueCube())
         {
             theDoll.decrStackSize(0, 1);
-            theWorld.setBlock(targetX, targetY, targetZ, Blocks.torch, 5, 3);
+            IBlockState iblockState = Blocks.torch.getStateFromMeta(5);
+            theWorld.setBlockState(new BlockPos(targetX, targetY, targetZ), iblockState, 3);
         }
 
         return false;
@@ -89,23 +92,25 @@ public class EntityDollAITorcher extends EntityDollAIBase
     
     protected boolean isValidLightLevel(int var1, int var2, int var3)
     {
-        if (this.theWorld.getSavedLightValue(EnumSkyBlock.Sky, var1, var2, var3) > this.theDoll.getRNG().nextInt(32))
+        BlockPos blockpos = new BlockPos(var1, var2, var3);
+
+        if (theWorld.getLightFor(EnumSkyBlock.SKY, blockpos) > theDoll.getRNG().nextInt(32))
         {
             return false;
         }
         else
         {
-            int var4 = this.theWorld.getBlockLightValue(var1, var2, var3);
+            int i = theWorld.getLightFromNeighbors(blockpos);
 
-            if (this.theWorld.isThundering())
+            if (theWorld.isThundering())
             {
-                int var5 = this.theWorld.skylightSubtracted;
-                this.theWorld.skylightSubtracted = 10;
-                var4 = this.theWorld.getBlockLightValue(var1, var2, var3);
-                this.theWorld.skylightSubtracted = var5;
+                int j = theWorld.getSkylightSubtracted();
+                theWorld.setSkylightSubtracted(10);
+                i = theWorld.getLightFromNeighbors(blockpos);
+                theWorld.setSkylightSubtracted(j);
             }
 
-            return var4 <= lightThreshold;
+            return i <= lightThreshold;
         }
     }
 }

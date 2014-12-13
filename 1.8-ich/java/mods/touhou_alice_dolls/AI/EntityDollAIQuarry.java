@@ -8,9 +8,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -48,7 +49,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         this.pathfinder = doll.getNavigator();
         targetPattern = Pattern.compile(levelingBlockRegex);
         counter = 0;
-        speed = 1.0F;
+        speed = 0.01F;
         anchorLockon = false;
         isMining = false;
     }
@@ -95,10 +96,10 @@ public class EntityDollAIQuarry extends EntityDollAIBase
                 for(int k=-16;k<=16;++k)
                 {
                     // ダイヤブロックの上にレッドストーントーチがあるとアンカーとして認識する
-                    if(theWorld.getBlock(dollposX+i, dollposY+j, dollposZ+k)
+                    if(theWorld.getBlockState(new BlockPos(dollposX+i, dollposY+j, dollposZ+k)).getBlock()
                        == Blocks.diamond_block)
                     {
-                        if(theWorld.getBlock(dollposX+i, dollposY+j+1, dollposZ+k)
+                        if(theWorld.getBlockState(new BlockPos(dollposX+i, dollposY+j+1, dollposZ+k)).getBlock()
                            == Blocks.redstone_torch)
                         {
                             anchorLockon = true;
@@ -119,7 +120,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         levelingXmax = levelingRange;
         for(int lx=1;lx<=levelingRange;++lx)
         {
-            if(theWorld.getBlock(anchorX+lx, anchorY+1, anchorZ)
+            if(theWorld.getBlockState(new BlockPos(anchorX+lx, anchorY+1, anchorZ)).getBlock()
                == Blocks.redstone_torch)
             {
                 levelingXmax = lx-1;
@@ -129,7 +130,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         levelingXmin = levelingRange;
         for(int lx=1;lx<=levelingRange;++lx)
         {
-            if(theWorld.getBlock(anchorX-lx, anchorY+1, anchorZ)
+            if(theWorld.getBlockState(new BlockPos(anchorX-lx, anchorY+1, anchorZ)).getBlock()
                == Blocks.redstone_torch)
             {
                 levelingXmin = lx-1;
@@ -139,7 +140,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         levelingZmax = levelingRange;
         for(int lz=1;lz<=levelingRange;++lz)
         {
-            if(theWorld.getBlock(anchorX, anchorY+1, anchorZ+lz)
+            if(theWorld.getBlockState(new BlockPos(anchorX, anchorY+1, anchorZ+lz)).getBlock()
                == Blocks.redstone_torch)
             {
                 levelingZmax = lz-1;
@@ -149,7 +150,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         levelingZmin = levelingRange;
         for(int lz=1;lz<=levelingRange;++lz)
         {
-            if(theWorld.getBlock(anchorX, anchorY+1, anchorZ-lz)
+            if(theWorld.getBlockState(new BlockPos(anchorX, anchorY+1, anchorZ-lz)).getBlock()
                == Blocks.redstone_torch)
             {
                 levelingZmin = lz-1;
@@ -200,12 +201,12 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         {
             return false;
         }
-        if(theWorld.getBlock(anchorX, anchorY, anchorZ)
+        if(theWorld.getBlockState(new BlockPos(anchorX, anchorY, anchorZ)).getBlock()
            != Blocks.diamond_block)
         {
             return false;
         }
-        if(theWorld.getBlock(anchorX, anchorY+1, anchorZ)
+        if(theWorld.getBlockState(new BlockPos(anchorX, anchorY+1, anchorZ)).getBlock()
            != Blocks.redstone_torch)
         {
             return false;
@@ -243,22 +244,22 @@ public class EntityDollAIQuarry extends EntityDollAIBase
         
             if (this.counter == 0)
             {
-                Block b = theWorld.getBlock(
-                        mineX, mineY, mineZ);
+                Block b = theWorld.getBlockState(new BlockPos(
+                        mineX, mineY, mineZ)).getBlock();
                 if(b != null)
                 {
-                    theWorld.func_147480_a(mineX, mineY, mineZ, true);
+                    theWorld.destroyBlock(new BlockPos(mineX, mineY, mineZ), true);
                 }
                 isMining = false;
             }
             if(this.counter > 0 && this.counter%4 == 0)
             {
-                Block b = theWorld.getBlock(
-                        mineX, mineY, mineZ);
+                Block b = theWorld.getBlockState(new BlockPos(
+                        mineX, mineY, mineZ)).getBlock();
                 if(b != null)
                 {
                     SoundType stepsound = b.stepSound;
-                    theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getPitch() * 0.5f);
+                    theDoll.playSound(stepsound.getBreakSound(), (stepsound.getVolume() + 1.0f) / 8f, stepsound.getFrequency() * 0.5f);
                 }
             }
             counter--;
@@ -345,14 +346,14 @@ public class EntityDollAIQuarry extends EntityDollAIBase
             }
             if(isMining)
             {
-                Block b = theWorld.getBlock(
-                        mineX, mineY, mineZ);
+                Block b = theWorld.getBlockState(new BlockPos(
+                        mineX, mineY, mineZ)).getBlock();
                 int blockStrength = -1;
                 if(b != null)
                 {
                     blockStrength = MathHelper.floor_double(
                         20.0*b.getBlockHardness(
-                            theWorld, mineX, mineY, mineZ)/mineSpeed);
+                            theWorld, new BlockPos(mineX, mineY, mineZ))/mineSpeed);
                 }
                 
                 this.counter = blockStrength < 0 ? 0 : blockStrength;
@@ -368,23 +369,23 @@ public class EntityDollAIQuarry extends EntityDollAIBase
     // 採掘可能かどうか判定する
 	private boolean canDigBlock(int i, int j, int k)
 	{
-		if(theWorld.isAirBlock(i, j, k))
+		if(theWorld.isAirBlock(new BlockPos(i, j, k)))
 		{
 			return false;
 		}
 		
-		Block b = theWorld.getBlock(i, j, k);
+		Block b = theWorld.getBlockState(new BlockPos(i, j, k)).getBlock();
 		if(b==null)
         {
             return false;
         }
         else
 		{
-			if(b.getBlockHardness(theWorld, i, j, k) < 0f || b.getBlockHardness(theWorld, i, j, k) > Blocks.obsidian.getBlockHardness(theWorld, 0, 0, 0))
+			if(b.getBlockHardness(theWorld, new BlockPos(i, j, k)) < 0f || b.getBlockHardness(theWorld, new BlockPos(i, j, k)) > Blocks.obsidian.getBlockHardness(theWorld, new BlockPos(0, 0, 0)))
 			{
 				return false;
 			}
-			if(theWorld.getBlock(i, j + 1, k) == Blocks.sand || theWorld.getBlock(i, j + 1, k) == Blocks.gravel)
+			if(theWorld.getBlockState(new BlockPos(i, j + 1, k)).getBlock() == Blocks.sand || theWorld.getBlockState(new BlockPos(i, j + 1, k)).getBlock() == Blocks.gravel)
 			{
 				return false;
 			}
@@ -397,13 +398,13 @@ public class EntityDollAIQuarry extends EntityDollAIBase
 		}
 		
 		int u=-1;
-		while(theWorld.isAirBlock(i, j+u, k))
+		while(theWorld.isAirBlock(new BlockPos(i, j+u, k)))
 		{
 			if(j+u<=0)
 			{
 				return false;
 			}
-			Block bu = theWorld.getBlock(i, j+u-1, k);
+			Block bu = theWorld.getBlockState(new BlockPos(i, j+u-1, k)).getBlock();
 			if(bu.getMaterial() == Material.lava)
 			{
 				return false;
@@ -419,7 +420,7 @@ public class EntityDollAIQuarry extends EntityDollAIBase
 				{
 					if((ii>0?ii:-ii)+(jj>0?jj:-jj)+(kk>0?kk:-kk)<=1)
 					{
-						Block bu = theWorld.getBlock(i+ii, j+jj, k+kk);
+						Block bu = theWorld.getBlockState(new BlockPos(i+ii, j+jj, k+kk)).getBlock();
 						if(bu.getMaterial() == Material.lava)
 						{
 							return false;

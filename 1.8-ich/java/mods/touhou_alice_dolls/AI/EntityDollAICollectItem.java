@@ -8,7 +8,7 @@ import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class EntityDollAICollectItem extends EntityDollAIBase
     public EntityDollAICollectItem(EntityAliceDoll doll)
     {
         super(doll);
-        this.speed = 1.0F;
+        this.speed = 0.01F;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
     }

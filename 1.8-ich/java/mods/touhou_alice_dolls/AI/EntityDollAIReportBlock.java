@@ -4,10 +4,10 @@ import net.minecraft.world.World;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.pathfinding.PathNavigate;
-
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -72,7 +72,7 @@ public class EntityDollAIReportBlock extends EntityDollAIBase
                         {
                             continue;
                         }
-                        Block b = theWorld.getBlock(dollposX+dx, dollposY+dy, dollposZ+dz);
+                        Block b = theWorld.getBlockState(new BlockPos(dollposX+dx, dollposY+dy, dollposZ+dz)).getBlock();
                         if(b==null)
                         {
                             continue;

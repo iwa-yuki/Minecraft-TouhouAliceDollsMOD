@@ -19,7 +19,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.DamageSource;
-import mods.touhou_alice_core.ai.EntityDollAIBase;
+import mods.touhou_alice_core.AI.EntityDollAIBase;
 import mods.touhou_alice_core.EntityAliceDoll;
 
 import java.util.*;
@@ -40,7 +40,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
     public EntityDollAIStealItem(EntityAliceDoll doll)
     {
         super(doll);
-        this.speed = 1.0F;
+        this.speed = 0.01F;
         this.pathfinder = doll.getNavigator();
         this.setMutexBits(3);
         counter = 0;
@@ -262,13 +262,13 @@ public class EntityDollAIStealItem extends EntityDollAIBase
 
                         for (int j = 0; j < i; j++)
                         {
-                            EntityItem entityitem = sheep.entityDropItem(new ItemStack(Blocks.wool, 1, sheep.getFleeceColor()), 1.0F);
+                            EntityItem entityitem = sheep.entityDropItem(new ItemStack(Blocks.wool, 1, sheep.func_175509_cj().func_176765_a()), 1.0F);
                             entityitem.motionY += rand.nextFloat() * 0.05F;
                             entityitem.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                             entityitem.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                         }
                         theWorld.playSoundAtEntity(theTarget, "mob.sheep.shear", 0.5F, (theDoll.getRNG().nextFloat() - theDoll.getRNG().nextFloat()) * 0.2F + 1.0F);
-                        theDoll.chatMessage(theDoll.getDollName() + " : Wool!",2);
+                        theDoll.chatMessage(theDoll.getName() + " : Wool!",2);
                         theDoll.swingItem();
                         theTarget = null;
                     }
@@ -280,7 +280,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
                     if(!chicken.isChild())
                     {
                         theTarget.entityDropItem(new ItemStack(Items.feather,1), 0.0F);
-                        theDoll.chatMessage(theDoll.getDollName() + " : Feather!",2);
+                        theDoll.chatMessage(theDoll.getName() + " : Feather!",2);
                         theDoll.swingItem();
                         theTarget.attackEntityFrom(DamageSource.causeMobDamage(theDoll), 0);
                         theTarget = null;
@@ -293,7 +293,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
                     if(!mooshroom.isChild())
                     {
                         theTarget.entityDropItem(new ItemStack(Blocks.red_mushroom,1), 0.0F);
-                        theDoll.chatMessage(theDoll.getDollName() + " : Mushroom!",2);
+                        theDoll.chatMessage(theDoll.getName() + " : Mushroom!",2);
                         theDoll.swingItem();
                         theTarget.attackEntityFrom(DamageSource.causeMobDamage(theDoll), 0);
                         theTarget = null;
@@ -314,7 +314,7 @@ public class EntityDollAIStealItem extends EntityDollAIBase
                         {
                             golem.setHoldingRose(false);
                             theTarget.entityDropItem(new ItemStack(Blocks.red_flower,1), 0.0F);
-                            theDoll.chatMessage(theDoll.getDollName() + " : Rose!",2);
+                            theDoll.chatMessage(theDoll.getName() + " : Rose!",2);
                             theTarget = null;
                         }
                     }
