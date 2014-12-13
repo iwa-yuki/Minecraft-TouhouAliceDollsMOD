@@ -1,4 +1,4 @@
-package mods.touhou_alice_core.doll;
+package mods.touhou_alice_core.dolls;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemArmor;
@@ -10,7 +10,7 @@ import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
 import mods.touhou_alice_core.client.EnumDollRenderType;
 import mods.touhou_alice_core.client.ModelAliceDoll;
-import mods.touhou_alice_core.ai.*;
+import mods.touhou_alice_core.AI.*;
 
 public class DollBase {
 
@@ -192,6 +192,10 @@ public class DollBase {
 	 */
 	public boolean isHover() {
 		return false;
+	}
+
+	public int getSizeInventory() {
+		return 9;
 	}
 
 

@@ -1,4 +1,4 @@
-package mods.touhou_alice_core.doll;
+package mods.touhou_alice_core.dolls;
 
 import mods.touhou_alice_core.EntityAliceDoll;
 import mods.touhou_alice_core.TouhouAliceCore;
@@ -198,5 +198,12 @@ public class DollRegistry {
     	}
     	
     	return 0;
+	}
+
+	public static int getSizeInventory(int id) {
+		if(isExist(id)) {
+			return dollList[id].getSizeInventory();
+		}
+		return dollList[0].getSizeInventory();
 	}
 }
