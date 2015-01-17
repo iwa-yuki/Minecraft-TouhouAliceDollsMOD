@@ -53,7 +53,7 @@ public class TouhouAliceCore
     /** MODの名前 */
     public static final String MODNAME = "Alice's Core MOD";
     /** MODのバージョン */
-    public static final String VERSION = "1.7.x-kog2";
+    public static final String VERSION = "1.7.10-kog3";
 
     /**
      * MODの唯一のインスタンス
@@ -108,19 +108,19 @@ public class TouhouAliceCore
         PacketHandler.init();
     }
     
-    @EventHandler
-    public void load(FMLInitializationEvent event) {
-    	MinecraftForge.EVENT_BUS.register(this);
-    }
-    
-    @SubscribeEvent
-    public void renderFirstPersonHand(RenderHandEvent event) {
-    	Minecraft mc = Minecraft.getMinecraft();
-    	if(mc.renderViewEntity instanceof EntityAliceDoll)
-    	{
-    		//event.setCanceled(true);
-    	}
-    }
+//    @EventHandler
+//    public void load(FMLInitializationEvent event) {
+//    	MinecraftForge.EVENT_BUS.register(this);
+//    }
+//    
+//    @SubscribeEvent
+//    public void renderFirstPersonHand(RenderHandEvent event) {
+//    	Minecraft mc = Minecraft.getMinecraft();
+//    	if(mc.renderViewEntity instanceof EntityAliceDoll)
+//    	{
+//    		//event.setCanceled(true);
+//    	}
+//    }
 
     /**
      * 初期化処理

@@ -4,6 +4,7 @@
 package mods.touhou_alice_core.client;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,6 +19,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.ResourceLocation;
 import static net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED;
 import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
@@ -29,8 +32,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.common.FMLLog;
 
 import com.google.common.collect.Maps;
+import com.mojang.authlib.GameProfile;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.lwjgl.opengl.GL11;
 
@@ -162,6 +167,8 @@ public class RenderAliceDoll extends RenderBiped
             }
             else if (itemHelmet.getItem() == Items.skull)
             {
+                GameProfile gameprofile = null;
+                
                 if(renderType == EnumDollRenderType.TALL)
                 {
                     GL11.glScalef(0.73F, 0.73F, 0.73F);
@@ -175,12 +182,22 @@ public class RenderAliceDoll extends RenderBiped
                 GL11.glScalef(f2, -f2, -f2);
                 String s = "";
 
-                if (itemHelmet.hasTagCompound() && itemHelmet.getTagCompound().hasKey("SkullOwner"))
+
+                if (itemHelmet.hasTagCompound())
                 {
-                    s = itemHelmet.getTagCompound().getString("SkullOwner");
+                    NBTTagCompound nbttagcompound = itemHelmet.getTagCompound();
+
+                    if (nbttagcompound.hasKey("SkullOwner", 10))
+                    {
+                        gameprofile = NBTUtil.func_152459_a(nbttagcompound.getCompoundTag("SkullOwner"));
+                    }
+                    else if (nbttagcompound.hasKey("SkullOwner", 8) && !StringUtils.isNullOrEmpty(nbttagcompound.getString("SkullOwner")))
+                    {
+                        gameprofile = new GameProfile((UUID)null, nbttagcompound.getString("SkullOwner"));
+                    }
                 }
 
-                TileEntitySkullRenderer.field_147536_b.func_147530_a(-0.5F, 0.0F, -0.5F, 1, 180.0F, itemHelmet.getItemDamage(), s);
+                TileEntitySkullRenderer.field_147536_b.func_152674_a(-0.5F, 0.0F, -0.5F, 1, 180.0F, itemHelmet.getItemDamage(), gameprofile);
             }
 
             GL11.glPopMatrix();
